@@ -1,0 +1,16 @@
+DIV=3
+WHITESP=8
+TIMES=4
+ERR=9
+LPAR=5
+NUM=7
+RPAR=6
+COMMENT=10
+PLUS=1
+MINUS=2
+'-'=2
+'+'=1
+'*'=4
+')'=6
+'('=5
+'/'=3
