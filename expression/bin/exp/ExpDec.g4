@@ -9,7 +9,11 @@ int	lexicalErrors=0;
 prog: exp EOF {System.out.println("Parsing finished!"); };/*prog variabile iniziale, EOF guarda di essere arrivato in fondo alla stringa*/
 
 exp:  exp (TIMES|DIV) exp|  exp (PLUS | MINUS) exp |NUM |LPAR exp RPAR; 
-//<assoc=right> : per ridefinire l'associatività che di default sarebbe a sx così prende solo gli alberi che sono associativi a dx sia per il * che per il +
+
+//exp: <assoc=right> exp (TIMES|DIV) exp| <assoc=right> exp (PLUS | MINUS) exp |NUM |LPAR exp RPAR; 
+/*<assoc=right> : per ridefinire l'associatività che di default sarebbe a sx così prende solo gli alberi 
+ * che sono associativi a dx sia per il '*' che per il '+'
+ */
 
 // LEXER RULES: una regex per ogni lessema del linguaggio: sono in ordine di priorità dall'alto verso il basso perchè sono antlr
 

@@ -11,6 +11,7 @@ prog: exp EOF {System.out.println("Parsing finished!"); };/*prog variabile inizi
 exp: term exp1; 							/*E -> T E'-> diventa : */
 exp1: PLUS term exp1| 	/*epsilon*/; 		/* +T E'|epsilon con la notazione EBNF posso liberarmi di E' utilizzzando la stella di Kleene*/
 
+
 term: value term1;							/* T-> V T'*/ 
 term1: TIMES value term1| 	/*epsilon */;	/*epsilon (non metto nulla) */ /* *V T'|epsilon */
 
