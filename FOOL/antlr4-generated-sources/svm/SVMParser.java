@@ -210,7 +210,7 @@ public class SVMParser extends Parser {
 		InstructionContext _localctx = new InstructionContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_instruction);
 		try {
-			setState(63);
+			setState(68);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
@@ -220,11 +220,8 @@ public class SVMParser extends Parser {
 				match(PUSH);
 				setState(14);
 				((InstructionContext)_localctx).n = match(INTEGER);
-									/*n mi da la possibilit� di accedere al lessema che ha matchato con integer*/
-				        			code[i++] = PUSH;  /*push INTEGER on the stack; 
-				        								push � un valore numerico che possiamo mettere dentro un array di interi: 
-				        								code parte  da 0 va avanti; code � l'array che conterr� la nostra roba*/
-				        			code[i++] =	Integer.parseInt((((InstructionContext)_localctx).n!=null?((InstructionContext)_localctx).n.getText():null));
+					code[i++] = PUSH;	
+				        				code[i++] =	Integer.parseInt((((InstructionContext)_localctx).n!=null?((InstructionContext)_localctx).n.getText():null));
 				}
 				break;
 			case 2:
@@ -234,8 +231,8 @@ public class SVMParser extends Parser {
 				match(PUSH);
 				setState(17);
 				((InstructionContext)_localctx).l = match(LABEL);
-					code[i++] = PUSH;			/*push the location address pointed by LABEL on the stack;*/
-					  						labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
+				code[i++] = PUSH;			
+						  			labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
 				}
 				break;
 			case 3:
@@ -283,21 +280,23 @@ public class SVMParser extends Parser {
 				{
 				setState(29);
 				match(STOREW);
+				code[i++] = STORERW;
 				}
 				break;
 			case 9:
 				enterOuterAlt(_localctx, 9);
 				{
-				setState(30);
+				setState(31);
 				match(LOADW);
+				code[i++] = LOADW;
 				}
 				break;
 			case 10:
 				enterOuterAlt(_localctx, 10);
 				{
-				setState(31);
+				setState(33);
 				((InstructionContext)_localctx).l = match(LABEL);
-				setState(32);
+				setState(34);
 				match(COL);
 				labelDef.put((((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null),i);
 				}
@@ -305,9 +304,9 @@ public class SVMParser extends Parser {
 			case 11:
 				enterOuterAlt(_localctx, 11);
 				{
-				setState(34);
+				setState(36);
 				match(BRANCH);
-				setState(35);
+				setState(37);
 				((InstructionContext)_localctx).l = match(LABEL);
 					code[i++] = BRANCH;			
 					  						labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
@@ -316,9 +315,9 @@ public class SVMParser extends Parser {
 			case 12:
 				enterOuterAlt(_localctx, 12);
 				{
-				setState(37);
+				setState(39);
 				match(BRANCHEQ);
-				setState(38);
+				setState(40);
 				((InstructionContext)_localctx).l = match(LABEL);
 					code[i++] = BRANCHEQ;			
 					  						labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
@@ -327,9 +326,9 @@ public class SVMParser extends Parser {
 			case 13:
 				enterOuterAlt(_localctx, 13);
 				{
-				setState(40);
+				setState(42);
 				match(BRANCHLESSEQ);
-				setState(41);
+				setState(43);
 				((InstructionContext)_localctx).l = match(LABEL);
 					code[i++] = BRANCHLESSEQ;			
 					  						labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
@@ -338,28 +337,31 @@ public class SVMParser extends Parser {
 			case 14:
 				enterOuterAlt(_localctx, 14);
 				{
-				setState(43);
+				setState(45);
 				match(JS);
+				code[i++] = POP;
 				}
 				break;
 			case 15:
 				enterOuterAlt(_localctx, 15);
 				{
-				setState(44);
+				setState(47);
 				match(LOADRA);
+				code[i++] = LOADRA;
 				}
 				break;
 			case 16:
 				enterOuterAlt(_localctx, 16);
 				{
-				setState(45);
+				setState(49);
 				match(STORERA);
+				code[i++] = STORERA;
 				}
 				break;
 			case 17:
 				enterOuterAlt(_localctx, 17);
 				{
-				setState(46);
+				setState(51);
 				match(LOADTM);
 				code[i++] = LOADTM;
 				}
@@ -367,7 +369,7 @@ public class SVMParser extends Parser {
 			case 18:
 				enterOuterAlt(_localctx, 18);
 				{
-				setState(48);
+				setState(53);
 				match(STORETM);
 				code[i++] = STORETM;
 				}
@@ -375,7 +377,7 @@ public class SVMParser extends Parser {
 			case 19:
 				enterOuterAlt(_localctx, 19);
 				{
-				setState(50);
+				setState(55);
 				match(LOADFP);
 				code[i++] = LOADFP;
 				}
@@ -383,7 +385,7 @@ public class SVMParser extends Parser {
 			case 20:
 				enterOuterAlt(_localctx, 20);
 				{
-				setState(52);
+				setState(57);
 				match(STOREFP);
 				code[i++] = STOREFP;
 				}
@@ -391,14 +393,14 @@ public class SVMParser extends Parser {
 			case 21:
 				enterOuterAlt(_localctx, 21);
 				{
-				setState(54);
+				setState(59);
 				match(COPYFP);
 				}
 				break;
 			case 22:
 				enterOuterAlt(_localctx, 22);
 				{
-				setState(55);
+				setState(60);
 				match(LOADHP);
 				code[i++] = LOADHP;
 				}
@@ -406,7 +408,7 @@ public class SVMParser extends Parser {
 			case 23:
 				enterOuterAlt(_localctx, 23);
 				{
-				setState(57);
+				setState(62);
 				match(STOREHP);
 				code[i++] = STOREHP;
 				}
@@ -414,7 +416,7 @@ public class SVMParser extends Parser {
 			case 24:
 				enterOuterAlt(_localctx, 24);
 				{
-				setState(59);
+				setState(64);
 				match(PRINT);
 				code[i++] = PRINT;
 				}
@@ -422,7 +424,7 @@ public class SVMParser extends Parser {
 			case 25:
 				enterOuterAlt(_localctx, 25);
 				{
-				setState(61);
+				setState(66);
 				match(HALT);
 				code[i++] = HALT;
 				}
@@ -441,26 +443,27 @@ public class SVMParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\36D\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\36I\4\2\t\2\4\3\t"+
 		"\3\3\2\7\2\b\n\2\f\2\16\2\13\13\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3B\n\3\3\3\2\2\4\2\4\2\2\2Z\2\t"+
-		"\3\2\2\2\4A\3\2\2\2\6\b\5\4\3\2\7\6\3\2\2\2\b\13\3\2\2\2\t\7\3\2\2\2\t"+
-		"\n\3\2\2\2\n\f\3\2\2\2\13\t\3\2\2\2\f\r\7\2\2\3\r\16\b\2\1\2\16\3\3\2"+
-		"\2\2\17\20\7\3\2\2\20\21\7\34\2\2\21B\b\3\1\2\22\23\7\3\2\2\23\24\7\33"+
-		"\2\2\24B\b\3\1\2\25\26\7\4\2\2\26B\b\3\1\2\27\30\7\5\2\2\30B\b\3\1\2\31"+
-		"\32\7\6\2\2\32B\b\3\1\2\33\34\7\7\2\2\34B\b\3\1\2\35\36\7\b\2\2\36B\b"+
-		"\3\1\2\37B\7\t\2\2 B\7\n\2\2!\"\7\33\2\2\"#\7\32\2\2#B\b\3\1\2$%\7\13"+
-		"\2\2%&\7\33\2\2&B\b\3\1\2\'(\7\f\2\2()\7\33\2\2)B\b\3\1\2*+\7\r\2\2+,"+
-		"\7\33\2\2,B\b\3\1\2-B\7\16\2\2.B\7\17\2\2/B\7\20\2\2\60\61\7\21\2\2\61"+
-		"B\b\3\1\2\62\63\7\22\2\2\63B\b\3\1\2\64\65\7\23\2\2\65B\b\3\1\2\66\67"+
-		"\7\24\2\2\67B\b\3\1\28B\7\25\2\29:\7\26\2\2:B\b\3\1\2;<\7\27\2\2<B\b\3"+
-		"\1\2=>\7\30\2\2>B\b\3\1\2?@\7\31\2\2@B\b\3\1\2A\17\3\2\2\2A\22\3\2\2\2"+
-		"A\25\3\2\2\2A\27\3\2\2\2A\31\3\2\2\2A\33\3\2\2\2A\35\3\2\2\2A\37\3\2\2"+
-		"\2A \3\2\2\2A!\3\2\2\2A$\3\2\2\2A\'\3\2\2\2A*\3\2\2\2A-\3\2\2\2A.\3\2"+
-		"\2\2A/\3\2\2\2A\60\3\2\2\2A\62\3\2\2\2A\64\3\2\2\2A\66\3\2\2\2A8\3\2\2"+
-		"\2A9\3\2\2\2A;\3\2\2\2A=\3\2\2\2A?\3\2\2\2B\5\3\2\2\2\4\tA";
+		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3G\n\3\3\3"+
+		"\2\2\4\2\4\2\2\2_\2\t\3\2\2\2\4F\3\2\2\2\6\b\5\4\3\2\7\6\3\2\2\2\b\13"+
+		"\3\2\2\2\t\7\3\2\2\2\t\n\3\2\2\2\n\f\3\2\2\2\13\t\3\2\2\2\f\r\7\2\2\3"+
+		"\r\16\b\2\1\2\16\3\3\2\2\2\17\20\7\3\2\2\20\21\7\34\2\2\21G\b\3\1\2\22"+
+		"\23\7\3\2\2\23\24\7\33\2\2\24G\b\3\1\2\25\26\7\4\2\2\26G\b\3\1\2\27\30"+
+		"\7\5\2\2\30G\b\3\1\2\31\32\7\6\2\2\32G\b\3\1\2\33\34\7\7\2\2\34G\b\3\1"+
+		"\2\35\36\7\b\2\2\36G\b\3\1\2\37 \7\t\2\2 G\b\3\1\2!\"\7\n\2\2\"G\b\3\1"+
+		"\2#$\7\33\2\2$%\7\32\2\2%G\b\3\1\2&\'\7\13\2\2\'(\7\33\2\2(G\b\3\1\2)"+
+		"*\7\f\2\2*+\7\33\2\2+G\b\3\1\2,-\7\r\2\2-.\7\33\2\2.G\b\3\1\2/\60\7\16"+
+		"\2\2\60G\b\3\1\2\61\62\7\17\2\2\62G\b\3\1\2\63\64\7\20\2\2\64G\b\3\1\2"+
+		"\65\66\7\21\2\2\66G\b\3\1\2\678\7\22\2\28G\b\3\1\29:\7\23\2\2:G\b\3\1"+
+		"\2;<\7\24\2\2<G\b\3\1\2=G\7\25\2\2>?\7\26\2\2?G\b\3\1\2@A\7\27\2\2AG\b"+
+		"\3\1\2BC\7\30\2\2CG\b\3\1\2DE\7\31\2\2EG\b\3\1\2F\17\3\2\2\2F\22\3\2\2"+
+		"\2F\25\3\2\2\2F\27\3\2\2\2F\31\3\2\2\2F\33\3\2\2\2F\35\3\2\2\2F\37\3\2"+
+		"\2\2F!\3\2\2\2F#\3\2\2\2F&\3\2\2\2F)\3\2\2\2F,\3\2\2\2F/\3\2\2\2F\61\3"+
+		"\2\2\2F\63\3\2\2\2F\65\3\2\2\2F\67\3\2\2\2F9\3\2\2\2F;\3\2\2\2F=\3\2\2"+
+		"\2F>\3\2\2\2F@\3\2\2\2FB\3\2\2\2FD\3\2\2\2G\5\3\2\2\2\4\tF";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

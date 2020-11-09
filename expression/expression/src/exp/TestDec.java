@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class TestDec {
     public static void main(String[] args) throws Exception {
 
-        String fileName = "provaDec.txt";
+        String fileName = "prova.txt";
      
         CharStream chars = CharStreams.fromFileName(fileName);
         ExpDecLexer lexer=new ExpDecLexer(chars); 		/*attacco il lexer alla stringa di carattere*/        

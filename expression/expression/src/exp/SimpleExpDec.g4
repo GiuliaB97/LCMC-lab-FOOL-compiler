@@ -8,7 +8,7 @@ int	lexicalErrors=0;
 // PARSER RULES: grammatica del linguaggio
 prog: exp EOF {System.out.println("Parsing finished!"); };/*prog variabile iniziale, EOF guarda di essere arrivato in fondo alla stringa*/
 
-exp:   exp TIMES exp	#expProd1 //<assoc=right> exp TIMES exp
+exp :  exp TIMES exp	#expProd1 //<assoc=right> exp TIMES exp
 	|  exp PLUS exp 	#expProd2 //<assoc=right> exp PLUS exp
 	|  LPAR exp RPAR	#expProd3
 	|  NUM  			#expProd4

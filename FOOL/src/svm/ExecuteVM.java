@@ -20,7 +20,9 @@ public class ExecuteVM {
     private int ip = 0;
     private int sp = MEMSIZE; //punta al top dello stack
     private int tm; //istanzio il registro tm; per evidenziare il fatto che tm non ha un valore iniziale lo lascio vuoto anche se in java verrà automaticamente inizialiazzato a zero
-    
+    private int hp;
+    private int fp;
+    private int ra;
     
     public ExecuteVM(int[] code) {
       this.code = code;			// il code viene passato dall'assemblatore tramite costruttore
@@ -95,6 +97,45 @@ public class ExecuteVM {
           case SVMParser.STORETM:
         	  pop(); 
         	  break;
+          case SVMParser.LOADHP:
+        	  push(hp); 
+        	  break;
+          case SVMParser.STOREHP:
+        	  pop(); 
+        	  break;
+          case SVMParser.LOADFP:
+        	  push(hp); 
+        	  break;
+          case SVMParser.STOREFP:
+        	  pop(); 
+        	  break;
+          case SVMParser.LOADRA:
+        	  push(hp); 
+        	  break;
+          case SVMParser.STORERA:
+        	  pop(); 
+        	  break;
+        
+        	  
+        	  
+        	  
+          case SVMParser.LOADW:
+        	  pop(); 
+        	  break;
+          case SVMParser.STOREW:
+        	  v1=pop();
+        	  v2=pop(); 
+        	  break;	  
+          
+          case SVMParser.JS:
+        	  pop();			//pop one value from the stack:
+        	  ra=ip;			//copy the instruction pointer in the RA register 
+        	  address=code[ip];	
+        	  ip=address;		//jump to the popped value
+        	  break;
+        	  
+        	  
+        	  
           case SVMParser.PRINT:
         	  System.out.println((sp<MEMSIZE)?memory[sp]: "Empty stack!");/*memory di sp mi da il valore in cima allo stack senza toccarlo(non faccio né push né pop)
         	  									problema: se lo stack è vuoto?
