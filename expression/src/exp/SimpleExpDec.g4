@@ -8,7 +8,11 @@ int	lexicalErrors=0;
 // PARSER RULES: grammatica del linguaggio
 prog: exp EOF {System.out.println("Parsing finished!"); };/*prog variabile iniziale, EOF guarda di essere arrivato in fondo alla stringa*/
 
-exp: <assoc=right> exp TIMES exp| <assoc=right> exp PLUS exp |NUM |LPAR exp RPAR; 
+exp:   exp TIMES exp	#expProd1 //<assoc=right> exp TIMES exp
+	|  exp PLUS exp 	#expProd2 //<assoc=right> exp PLUS exp
+	|  LPAR exp RPAR	#expProd3
+	|  NUM  			#expProd4
+	;
 //<assoc=right> : per ridefinire l'associatività che di default sarebbe a sx così prende solo gli alberi che sono associativi a dx sia per il * che per il +
 
 // LEXER RULES: una regex per ogni lessema del linguaggio: sono in ordine di priorità dall'alto verso il basso perchè sono antlr

@@ -8,9 +8,19 @@ int	lexicalErrors=0;
 // PARSER RULES: grammatica del linguaggio
 prog: exp EOF {System.out.println("Parsing finished!"); };/*prog variabile iniziale, EOF guarda di essere arrivato in fondo alla stringa*/
 
-exp:  exp (TIMES|DIV) exp|  exp (PLUS | MINUS) exp |NUM |LPAR exp RPAR; 
+exp :   exp (TIMES | DIV) exp	#expProd1
+	|	exp (PLUS  | MINUS) exp	#expProd2
+	|	LPAR exp RPAR 			#expProd3
+	|	(MINUS) ? NUM  			#expProd4
+;
 
-//exp: <assoc=right> exp (TIMES|DIV) exp| <assoc=right> exp (PLUS | MINUS) exp |NUM |LPAR exp RPAR; 
+/*Associatività a dx
+ * exp:	  <assoc=right> exp (TIMES|DIV) exp
+ 		| <assoc=right> exp (PLUS | MINUS) exp 
+ 		| LPAR exp RPAR  
+ 		| NUM; 
+*/
+
 /*<assoc=right> : per ridefinire l'associatività che di default sarebbe a sx così prende solo gli alberi 
  * che sono associativi a dx sia per il '*' che per il '+'
  */
