@@ -44,7 +44,7 @@ instruction:
 	  | DIV		{code[i++] = DIV;}					//pop the two values v1 and v2 (respectively) and push v2/v1;  ha argomenti implici perchè lavora con lo stack
 	  
 	  
-	  | STOREW	{code[i++] = STORERA;}				///pop two values: 
+	  | STOREW	{code[i++] = STORERW;}				///pop two values: 
 	  												//  the second one is written at the memory address pointed by the first one
 	  | LOADW  {code[i++] = LOADW;}   				///read the content of the memory cell pointed by the top of the stack
 	                								//  and replace the top of the stack with such value

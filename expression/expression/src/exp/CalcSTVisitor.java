@@ -34,19 +34,19 @@ public class CalcSTVisitor extends ExpDecBaseVisitor<Integer> {
 		boolean times=ctx.TIMES()!=null;
 		System.out.println(indent+"exp: prod1 with "+ (times?"TIMES": "DIV"));
 		if (times)
-			return visit( ctx.exp(0)) * visit( ctx.exp(0) ); //in questo caso ho due figli exp: posso distinguerli indicando un paramentro 
+			return visit( ctx.exp(0)) * visit( ctx.exp(1) ); //in questo caso ho due figli exp: posso distinguerli indicando un paramentro 
 															// 0: primo, 1: secondo
-		else //ctx.DIV !=null
-			return visit( ctx.exp(0)) * visit( ctx.exp(0) );
+		else //ctx.DIV !=null//deve essere ctx.DIV( ) != null
+			return visit( ctx.exp(0)) / visit( ctx.exp(1) );
 	}
 	public Integer visitExpProd2(ExpProd2Context ctx) { //PRODUZIONE 2: SOMMA
 		boolean plus=ctx.PLUS()!=null;
 		System.out.println(indent+"exp: prod1 with "+ (plus?"PLUS": "MINUS"));
 		if (plus)
-			return visit( ctx.exp(0)) * visit( ctx.exp(0) ); //in questo caso ho due figli exp: posso distinguerli indicando un paramentro 
+			return visit( ctx.exp(0)) + visit( ctx.exp(1)); //in questo caso ho due figli exp: posso distinguerli indicando un paramentro 
 															// 0: primo, 1: secondo
 		else //ctx.MINUS() !=null
-			return visit( ctx.exp(0)) * visit( ctx.exp(0) );
+			return visit( ctx.exp(0)) - visit( ctx.exp(1));
 	}
 	
 	public Integer visitExpProd3(ExpProd3Context ctx) { //PRODUZIONE 2: SOMMA
