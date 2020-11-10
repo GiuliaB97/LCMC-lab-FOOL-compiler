@@ -280,7 +280,7 @@ public class SVMParser extends Parser {
 				{
 				setState(29);
 				match(STOREW);
-				code[i++] = STORERW;
+				code[i++] = STOREW;
 				}
 				break;
 			case 9:
