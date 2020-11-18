@@ -50,4 +50,35 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		System.out.println(indent+"exp: prod with "+(minus?"MINUS ":"")+"NUM "+res );
 		return new IntNode(res);
 	}
+	
+	/*
+	 * Esercizio 2
+	 */
+//	@Override
+//	public Node visitEqual(EqualContext c) {
+//		System.out.println(indent+"exp: prod with EQUAL");
+//		return new TimesNode( visit(c.exp(0)), visit(c.exp(1)) );
+//	}
+//	
+//	@Override
+//	public Node visitBool(BoolContext c) {
+//		int v=Integer.parseInt(c.NUM().getText());	
+//		boolean minus= c.MINUS( ) != null;
+//		int res= minus?-v:v;
+//		System.out.println(indent+"exp: prod with "+(minus?"MINUS ":"")+"NUM "+res );
+//		return new IntNode(res);
+//		
+//	}
+//	
+//	@Override
+//	public Node IfNode(IfContext c) {
+//		System.out.println(indent+"exp: prod with IF");
+//		return new TimesNode( visit(c.exp(0)), visit(c.exp(1), visit(c.exp(2))));
+//	}
+//	
+//	@Override
+//	public Node visitPrint(PrintContext c) {
+//		System.out.println(indent+"exp: prod with PRINT");
+//		return visit(c.exp());
+//	}
 }
