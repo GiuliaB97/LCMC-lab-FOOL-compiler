@@ -97,7 +97,12 @@ public class SVMParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	int[] code = new int[ExecuteVM.CODESIZE];    
+	int[] code = new int[ExecuteVM.CODESIZE];  /*code � un array di interi che conterr� il codice oggetto
+	 											*creato vuoto; con sta costante,
+	 											* idea tutte le volte che vedo un'istruzione vado a popolare l'array code''
+	 											* ed incremento la i
+	 											* occhio: non stiamo eseguendo ma stiamo trasformando il resto in numeri
+	 											*  */  
 	private int i = 0; /*non stiamo eseguendo ma trasformando il testo in numeri la i verr� incrementata */
 						/* ad ogni token viene associato in maniera automatica da antlr un numero(SVM.tokens) */
 	private HashMap<String,Integer> labelDef = new HashMap<String,Integer>();
@@ -210,7 +215,7 @@ public class SVMParser extends Parser {
 		InstructionContext _localctx = new InstructionContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_instruction);
 		try {
-			setState(68);
+			setState(69);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
@@ -339,7 +344,7 @@ public class SVMParser extends Parser {
 				{
 				setState(45);
 				match(JS);
-				code[i++] = POP;
+				code[i++] = JS;
 				}
 				break;
 			case 15:
@@ -395,12 +400,13 @@ public class SVMParser extends Parser {
 				{
 				setState(59);
 				match(COPYFP);
+				code[i++] = COPYFP;
 				}
 				break;
 			case 22:
 				enterOuterAlt(_localctx, 22);
 				{
-				setState(60);
+				setState(61);
 				match(LOADHP);
 				code[i++] = LOADHP;
 				}
@@ -408,7 +414,7 @@ public class SVMParser extends Parser {
 			case 23:
 				enterOuterAlt(_localctx, 23);
 				{
-				setState(62);
+				setState(63);
 				match(STOREHP);
 				code[i++] = STOREHP;
 				}
@@ -416,7 +422,7 @@ public class SVMParser extends Parser {
 			case 24:
 				enterOuterAlt(_localctx, 24);
 				{
-				setState(64);
+				setState(65);
 				match(PRINT);
 				code[i++] = PRINT;
 				}
@@ -424,7 +430,7 @@ public class SVMParser extends Parser {
 			case 25:
 				enterOuterAlt(_localctx, 25);
 				{
-				setState(66);
+				setState(67);
 				match(HALT);
 				code[i++] = HALT;
 				}
@@ -443,27 +449,28 @@ public class SVMParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\36I\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\36J\4\2\t\2\4\3\t"+
 		"\3\3\2\7\2\b\n\2\f\2\16\2\13\13\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3G\n\3\3\3"+
-		"\2\2\4\2\4\2\2\2_\2\t\3\2\2\2\4F\3\2\2\2\6\b\5\4\3\2\7\6\3\2\2\2\b\13"+
-		"\3\2\2\2\t\7\3\2\2\2\t\n\3\2\2\2\n\f\3\2\2\2\13\t\3\2\2\2\f\r\7\2\2\3"+
-		"\r\16\b\2\1\2\16\3\3\2\2\2\17\20\7\3\2\2\20\21\7\34\2\2\21G\b\3\1\2\22"+
-		"\23\7\3\2\2\23\24\7\33\2\2\24G\b\3\1\2\25\26\7\4\2\2\26G\b\3\1\2\27\30"+
-		"\7\5\2\2\30G\b\3\1\2\31\32\7\6\2\2\32G\b\3\1\2\33\34\7\7\2\2\34G\b\3\1"+
-		"\2\35\36\7\b\2\2\36G\b\3\1\2\37 \7\t\2\2 G\b\3\1\2!\"\7\n\2\2\"G\b\3\1"+
-		"\2#$\7\33\2\2$%\7\32\2\2%G\b\3\1\2&\'\7\13\2\2\'(\7\33\2\2(G\b\3\1\2)"+
-		"*\7\f\2\2*+\7\33\2\2+G\b\3\1\2,-\7\r\2\2-.\7\33\2\2.G\b\3\1\2/\60\7\16"+
-		"\2\2\60G\b\3\1\2\61\62\7\17\2\2\62G\b\3\1\2\63\64\7\20\2\2\64G\b\3\1\2"+
-		"\65\66\7\21\2\2\66G\b\3\1\2\678\7\22\2\28G\b\3\1\29:\7\23\2\2:G\b\3\1"+
-		"\2;<\7\24\2\2<G\b\3\1\2=G\7\25\2\2>?\7\26\2\2?G\b\3\1\2@A\7\27\2\2AG\b"+
-		"\3\1\2BC\7\30\2\2CG\b\3\1\2DE\7\31\2\2EG\b\3\1\2F\17\3\2\2\2F\22\3\2\2"+
-		"\2F\25\3\2\2\2F\27\3\2\2\2F\31\3\2\2\2F\33\3\2\2\2F\35\3\2\2\2F\37\3\2"+
-		"\2\2F!\3\2\2\2F#\3\2\2\2F&\3\2\2\2F)\3\2\2\2F,\3\2\2\2F/\3\2\2\2F\61\3"+
-		"\2\2\2F\63\3\2\2\2F\65\3\2\2\2F\67\3\2\2\2F9\3\2\2\2F;\3\2\2\2F=\3\2\2"+
-		"\2F>\3\2\2\2F@\3\2\2\2FB\3\2\2\2FD\3\2\2\2G\5\3\2\2\2\4\tF";
+		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3H\n\3"+
+		"\3\3\2\2\4\2\4\2\2\2`\2\t\3\2\2\2\4G\3\2\2\2\6\b\5\4\3\2\7\6\3\2\2\2\b"+
+		"\13\3\2\2\2\t\7\3\2\2\2\t\n\3\2\2\2\n\f\3\2\2\2\13\t\3\2\2\2\f\r\7\2\2"+
+		"\3\r\16\b\2\1\2\16\3\3\2\2\2\17\20\7\3\2\2\20\21\7\34\2\2\21H\b\3\1\2"+
+		"\22\23\7\3\2\2\23\24\7\33\2\2\24H\b\3\1\2\25\26\7\4\2\2\26H\b\3\1\2\27"+
+		"\30\7\5\2\2\30H\b\3\1\2\31\32\7\6\2\2\32H\b\3\1\2\33\34\7\7\2\2\34H\b"+
+		"\3\1\2\35\36\7\b\2\2\36H\b\3\1\2\37 \7\t\2\2 H\b\3\1\2!\"\7\n\2\2\"H\b"+
+		"\3\1\2#$\7\33\2\2$%\7\32\2\2%H\b\3\1\2&\'\7\13\2\2\'(\7\33\2\2(H\b\3\1"+
+		"\2)*\7\f\2\2*+\7\33\2\2+H\b\3\1\2,-\7\r\2\2-.\7\33\2\2.H\b\3\1\2/\60\7"+
+		"\16\2\2\60H\b\3\1\2\61\62\7\17\2\2\62H\b\3\1\2\63\64\7\20\2\2\64H\b\3"+
+		"\1\2\65\66\7\21\2\2\66H\b\3\1\2\678\7\22\2\28H\b\3\1\29:\7\23\2\2:H\b"+
+		"\3\1\2;<\7\24\2\2<H\b\3\1\2=>\7\25\2\2>H\b\3\1\2?@\7\26\2\2@H\b\3\1\2"+
+		"AB\7\27\2\2BH\b\3\1\2CD\7\30\2\2DH\b\3\1\2EF\7\31\2\2FH\b\3\1\2G\17\3"+
+		"\2\2\2G\22\3\2\2\2G\25\3\2\2\2G\27\3\2\2\2G\31\3\2\2\2G\33\3\2\2\2G\35"+
+		"\3\2\2\2G\37\3\2\2\2G!\3\2\2\2G#\3\2\2\2G&\3\2\2\2G)\3\2\2\2G,\3\2\2\2"+
+		"G/\3\2\2\2G\61\3\2\2\2G\63\3\2\2\2G\65\3\2\2\2G\67\3\2\2\2G9\3\2\2\2G"+
+		";\3\2\2\2G=\3\2\2\2G?\3\2\2\2GA\3\2\2\2GC\3\2\2\2GE\3\2\2\2H\5\3\2\2\2"+
+		"\4\tG";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

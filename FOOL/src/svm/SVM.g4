@@ -1,5 +1,12 @@
 grammar SVM;
+/*
+ * When you use ANTLR you start by writing a grammar, 
+ * a file with extension .g4 which contains the rules of the language that you are analyzing.
+ *  You then use the antlr4 program to generate the files that your program will actually use, 
+ * such as the lexer and the parser.
 
+ 
+ */
 @header {
 import java.util.HashMap;
 }
@@ -9,7 +16,12 @@ int lexicalErrors=0;
 }
 
 @parser::members {
-int[] code = new int[ExecuteVM.CODESIZE];    
+int[] code = new int[ExecuteVM.CODESIZE];  /*code è un array di interi che conterrà il codice oggetto
+ 											*creato vuoto; con sta costante,
+ 											* idea tutte le volte che vedo un'istruzione vado a popolare l'array code''
+ 											* ed incremento la i
+ 											* occhio: non stiamo eseguendo ma stiamo trasformando il resto in numeri
+ 											*  */  
 private int i = 0; /*non stiamo eseguendo ma trasformando il testo in numeri la i verrà incrementata */
 					/* ad ogni token viene associato in maniera automatica da antlr un numero(SVM.tokens) */
 private HashMap<String,Integer> labelDef = new HashMap<String,Integer>();
@@ -20,7 +32,9 @@ private HashMap<Integer,String> labelRef = new HashMap<Integer,String>();
 /*------------------------------------------------------------------
  * PARSER RULES
  *------------------------------------------------------------------*/
-
+//assembly è il nostro S grande (variabile iniziale)
+//instruction *EOF: insieme di istruzioni $
+//S -> insieme di istruzioni $
 assembly: instruction* EOF {for(Integer j: labelRef.keySet())
 							code[j]=labelDef.get(labelRef.get(j));/*questo è quello che vado a mettere come indirizzo nel buco*/
 							}; 
@@ -71,7 +85,7 @@ instruction:
 	  
 	  
 	  
-	  | JS        {code[i++] = POP;}        ///pop one value from the stack:
+	  | JS        {code[i++] = JS;}        ///pop one value from the stack:
 	  		      							//  copy the instruction pointer in the RA register and jump to the popped value 
 	  		       
 	  /*in generale ho una load e una store per ogni registro */  
@@ -85,7 +99,7 @@ instruction:
 	  											ha argomenti implici perchè lavora con lo stack*/
 	  | LOADFP      {code[i++] = LOADFP;}	///push in the stack the content of the FP register   
 	  | STOREFP     {code[i++] = STOREFP;}	///pop the top of the stack and copy it in the FP register    
-	  | COPYFP      						///copy in the FP register the currest stack pointer    
+	  | COPYFP      {code[i++] = COPYFP;}			///copy in the FP register the current stack pointer    
 	  | LOADHP      {code[i++] = LOADHP;}	///push in the stack the content of the HP register    
 	  | STOREHP     {code[i++] = STOREHP;}	///pop the top of the stack and copy it in the HP register  
 	    
@@ -95,6 +109,7 @@ instruction:
  	 
 /*------------------------------------------------------------------
  * LEXER RULES
+ * n token per ogni istruzione
  *------------------------------------------------------------------*/
 //nomi token  nomi ??
 PUSH		: 'push' ; 	
