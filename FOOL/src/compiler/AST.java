@@ -1,83 +1,150 @@
 package compiler;
 
+import java.util.*;
+import compiler.AST.*;
 import compiler.lib.*;
-//Syntax Tree albero di parsing che data una grammatica e una stringa appartenente ad essa c'è un albero in cui questa si può leggere nelle foglie; questo viente generato da antlr
-//Noi partiamo da questa versione concreta dell'albero e gneriamo una versione astratta
-//rappresentata da questi nodi;
-
-///node è l'interfaccia che ha il metodo accept
 
 public class AST {
 
-	public static class ProgNode implements Node {
+	public static class ProgNode extends Node {
 		Node exp;
-		ProgNode(Node e) { exp = e; }
+		ProgNode(Node e) {exp = e;}
 
 		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
-	}
-
-	public static class IntNode implements Node {
-		Integer val;
-		IntNode(Integer n) { val = n; }
-
-		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
-	}
-
-	public static class PlusNode implements Node {
-		Node left;
-		Node right;
-		PlusNode(Node l, Node r) { left = l; right = r; }
-
-		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
-	}
-
-	public static class TimesNode implements Node {
-		Node left;
-		Node right;
-		TimesNode(Node l, Node r) { left = l; right = r; }
-
-		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
-	}
-
-	public static class EqualNode implements Node {
-		Node left;
-		Node right;
-		EqualNode(Node l, Node r) { left = l; right = r; }
-
-		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
 	}
 	
-	public static class BoolNode implements Node {
-		Boolean val;
-		BoolNode(Boolean b) { val = b; }
+	public static class IntNode extends Node {
+		Integer val;
+		IntNode(Integer n) {val = n;}
 
 		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
 	}
+	
+	public static class PlusNode extends Node {
+		Node left;
+		Node right;
+		PlusNode(Node l, Node r) {left = l; right = r;}
 
-	public static class IfNode implements Node {
-		//sono sottocondizioni perchè ognuna può avere un sottoalbero
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+	
+	public static class TimesNode extends Node {
+		Node left;
+		Node right;
+		TimesNode(Node l, Node r) {left = l; right = r;}
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+	
+	public static class EqualNode extends Node {
+		Node left;
+		Node right;
+		EqualNode(Node l, Node r) {left = l; right = r;}
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+	
+	public static class BoolNode extends Node {
+		Boolean val;
+		BoolNode(boolean n) {val = n;}
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+	
+	public static class IfNode extends Node {
 		Node cond;
 		Node th;
 		Node el;
-
-		IfNode(Node c, Node t, Node e) { cond = c; th = t; el = e; }
+		IfNode(Node c, Node t, Node e) {cond = c; th = t; el = e;}
 
 		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }	
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
 	}
-
-	public static class PrintNode implements Node {
+	
+	public static class PrintNode extends Node {
 		Node exp;
-		PrintNode(Node e) { exp = e; }
+		PrintNode(Node e) {exp = e;}
 
 		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
 	}
 
+	////
+	
+	public static class ProgLetInNode extends Node {
+		List<Node> declist;
+		Node exp;
+		ProgLetInNode(List<Node> d, Node e) {declist = d; exp = e;}
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+
+	public static class BoolTypeNode extends Node {
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+
+	public static class IntTypeNode extends Node {
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+
+	public static class VarNode extends Node {
+		String id;
+		Node type;
+		Node exp;
+		VarNode(String i, Node t, Node v) {id = i; type = t; exp = v;}
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+
+	public static class FunNode extends Node {
+		String id;
+		Node retType;
+		//List<ParNode> parlist;
+		List<Node> declist; 
+		Node exp;
+		FunNode(String i, Node rt, /* List<ParNode> pl, */ List<Node> dl, Node e) {
+	    	id=i; retType=rt; /* parlist=pl; */ declist=dl; exp=e;}
+		
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+
+	public static class IdNode extends Node {
+		String id;
+		IdNode(String i) {id = i;}
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
+
+	public static class CallNode extends Node {
+		String id;
+		// List<Node> arglist;
+		CallNode(String i /*, List<Node> p */) {id = i; /* arglist = p; */}
+
+		@Override
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+	}
 }
+
+//	public static class ArrowTypeNode extends Node {
+//		List<Node> parlist;
+//		Node ret;
+//		ArrowTypeNode(List<Node> p, Node r) {parlist = p; ret = r;}
+//
+//		@Override
+//		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
+//	}
+

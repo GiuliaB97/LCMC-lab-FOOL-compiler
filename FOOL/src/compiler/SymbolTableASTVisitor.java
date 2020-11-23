@@ -1,28 +1,39 @@
 package compiler;
 
+import java.util.*;
+import java.util.Map;
+
 import compiler.AST.*;
 import compiler.lib.*;
+import compiler.lib.Node;
 
-public class PrintASTVisitor extends BaseASTVisitor<Void> {
+public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
+	
+	int stErrors=0;
+	private List<Map<String, STentry>> symTable = new ArrayList<>();
+	private int nestingLevel=0;
+	//livello ambiente con dichiarazioni piu' esterno è 0 (prima posizione ArrayList) invece che 1 (slides)
+	//il "fronte" della lista di tabelle è symTable.get(nestingLevel)
 
-	PrintASTVisitor() { super(true); }
+	SymbolTableASTVisitor() {}
+	SymbolTableASTVisitor(boolean debug) {super(debug);} // p=true enables print for debugging
 
 	@Override
 	public Void visitNode(ProgNode n) {
-		printNode(n);
+		if (print) printNode(n);
 		visit(n.exp);
 		return null;
 	}
 	
 	@Override
 	public Void visitNode(IntNode n) {
-		printNode(n, n.val.toString());
+		if (print) printNode(n, n.val.toString());
 		return null;
 	}
-
+	
 	@Override
 	public Void visitNode(PlusNode n) {
-		printNode(n);
+		if (print) printNode(n);
 		visit(n.left);
 		visit(n.right);
 		return null;
@@ -30,15 +41,15 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 	
 	@Override
 	public Void visitNode(TimesNode n) {
-		printNode(n);
+		if (print) printNode(n);
 		visit(n.left);
 		visit(n.right);
 		return null;
 	}
-
+	
 	@Override
 	public Void visitNode(EqualNode n) {
-		printNode(n);
+		if (print) printNode(n);
 		visit(n.left);
 		visit(n.right);
 		return null;
@@ -46,14 +57,13 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 	
 	@Override
 	public Void visitNode(BoolNode n) {
-		printNode(n, n.val.toString());
+		if (print) printNode(n, n.val.toString());
 		return null;
 	}
-
-
+	
 	@Override
 	public Void visitNode(IfNode n) {
-		printNode(n);
+		if (print) printNode(n);
 		visit(n.cond);
 		visit(n.th);
 		visit(n.el);
@@ -62,74 +72,49 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 	
 	@Override
 	public Void visitNode(PrintNode n) {
-		printNode(n);
+		if (print) printNode(n);
 		visit(n.exp);
 		return null;
 	}
 
-//	
+//
 	@Override
 	public Void visitNode(ProgLetInNode n) {
-		printNode(n);
+		if (print) printNode(n);
 		for (Node dec : n.declist) visit(dec);
 		visit(n.exp);
 		return null;
 	}
 
 	@Override
-	public Void visitNode(BoolTypeNode n) {
-		printNode(n);
-		return null;
-	}
-
-	@Override
-	public Void visitNode(IntTypeNode n) {
-		printNode(n);
-		return null;
-	}
-
-	@Override
 	public Void visitNode(VarNode n) {
-		printNode(n,n.id);
-		visit(n.type);
+		if (print) printNode(n,n.id);
 		visit(n.exp);
 		return null;
 	}
 
 	@Override
 	public Void visitNode(FunNode n) {
-		printNode(n,n.id);
-		visit(n.retType);
+		if (print) printNode(n,n.id);
 		// for (ParNode par : n.parlist) visit(par);
 		for (Node dec : n.declist) visit(dec);
 		visit(n.exp);
 		return null;
 	}
+
+//	private STentry stLookup(String id) {}
 	
 	@Override
 	public Void visitNode(IdNode n) {
-		printNode(n,n.id);
+		if (print) printNode(n);
 		return null;
 	}
 
 	@Override
 	public Void visitNode(CallNode n) {
-		printNode(n,n.id);
+		if (print) printNode(n);
 		// for (Node arg : n.arglist) visit(arg);
 		return null;
 	}
 }
-
-//@Override
-//public Void visitSTentry(STentry entry) {
-//	printSTentry("nestlev "+entry.nl);
-//	return null;
-//}
-//
-//@Override
-//public Void visitNode(ArrowTypeNode n) {
-//	printNode(n);
-//	for (Node par: n.parlist) visit(par);
-//	visitArrow(n.ret);
-//	return null;
-//}
+//System.out.println("Var id " + n.id + " at line "+ n.getLine() +" already declared");
