@@ -39,6 +39,10 @@ public class BaseASTVisitor<S> {
 	public S visit(PlusNode n) { throw new UnimplException(); }
 	public S visit(TimesNode n) { throw new UnimplException(); }
 	public S visit(IntNode n) { throw new UnimplException(); }
+	public S visit(EqualNode n) { throw new UnimplException(); }
+	public S visit(BoolNode n) { throw new UnimplException(); }
+	public S visit(IfNode n) { throw new UnimplException(); }
+	public S visit(PrintNode n) { throw new UnimplException(); }
 }
 
 	//il dynamic binding funziona solo sul soggetto che chiama il metodo non sui suoi parametri; in questo caso risolve il problema del biding a tempo statico non a run time

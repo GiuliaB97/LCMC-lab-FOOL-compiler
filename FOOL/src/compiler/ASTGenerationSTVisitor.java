@@ -35,7 +35,13 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		System.out.println(indent+"exp: prod with PLUS");
 		return new PlusNode( visit(c.exp(0)), visit(c.exp(1)) );
 	}
-
+	
+	@Override
+	public Node visitLowPriOp(LowPriOpContext c) {
+		System.out.println(indent+"exp: prod with EQ");
+		return new EqualNode( visit(c.exp(0)), visit(c.exp(1)) );
+	}
+	
 	@Override
 	public Node visitPars(ParsContext c) {
 		System.out.println(indent+"exp: prod with LPAR RPAR");
@@ -45,40 +51,34 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitInteger(IntegerContext c) {
 		int v=Integer.parseInt(c.NUM().getText());	
-		boolean minus= c.MINUS( ) != null;
-		int res= minus?-v:v;
+		boolean minus=(c.MINUS()!=null);
+		int res=minus?-v:v;
 		System.out.println(indent+"exp: prod with "+(minus?"MINUS ":"")+"NUM "+res );
 		return new IntNode(res);
 	}
-	
-	/*
-	 * Esercizio 2
-	 */
-//	@Override
-//	public Node visitEqual(EqualContext c) {
-//		System.out.println(indent+"exp: prod with EQUAL");
-//		return new TimesNode( visit(c.exp(0)), visit(c.exp(1)) );
-//	}
-//	
-//	@Override
-//	public Node visitBool(BoolContext c) {
-//		int v=Integer.parseInt(c.NUM().getText());	
-//		boolean minus= c.MINUS( ) != null;
-//		int res= minus?-v:v;
-//		System.out.println(indent+"exp: prod with "+(minus?"MINUS ":"")+"NUM "+res );
-//		return new IntNode(res);
-//		
-//	}
-//	
-//	@Override
-//	public Node IfNode(IfContext c) {
-//		System.out.println(indent+"exp: prod with IF");
-//		return new TimesNode( visit(c.exp(0)), visit(c.exp(1), visit(c.exp(2))));
-//	}
-//	
-//	@Override
-//	public Node visitPrint(PrintContext c) {
-//		System.out.println(indent+"exp: prod with PRINT");
-//		return visit(c.exp());
-//	}
+
+	@Override
+	public Node visitTrue(TrueContext c) {
+		System.out.println(indent+"exp: prod with TRUE");
+		return new BoolNode(true);
+	}
+
+	@Override
+	public Node visitFalse(FalseContext c) {
+		System.out.println(indent+"exp: prod with FALSE");
+		return new BoolNode(false);
+	}
+
+	@Override
+	public Node visitIf(IfContext c) {
+		System.out.println(indent+"exp: prod with IF THEN CLPAR CRPAR ELSE CLPAR CRPAR");
+		return new IfNode( visit(c.exp(0)), visit(c.exp(1)), visit(c.exp(2)) );
+	}
+
+	@Override
+	public Node visitPrint(PrintContext c) {
+		System.out.println(indent+"exp: prod with PRINT LPAR RPAR");
+		return new PrintNode( visit(c.exp()) );
+	}
+
 }

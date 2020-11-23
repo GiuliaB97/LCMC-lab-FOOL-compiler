@@ -37,11 +37,7 @@ public class AST {
 		@Override
 		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
 	}
-	
-	
-	/*
-	 * Esercizio 1
-	 */
+
 	public static class EqualNode implements Node {
 		Node left;
 		Node right;
@@ -53,31 +49,29 @@ public class AST {
 	
 	public static class BoolNode implements Node {
 		Boolean val;
-		BoolNode(Boolean n) { val = n; }
+		BoolNode(Boolean b) { val = b; }
 
 		@Override
 		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
 	}
-	
+
 	public static class IfNode implements Node {
-		Node left;
-		Node right;
-		Node center;
-		IfNode (Node l, Node c, Node r ) { left = l; right = r; center=c;}
+		Node cond;
+		Node th;
+		Node el;
+
+		IfNode(Node c, Node t, Node e) { cond = c; th = t; el = e; }
 
 		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
+		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }	
 	}
-	
+
 	public static class PrintNode implements Node {
+		Node exp;
+		PrintNode(Node e) { exp = e; }
 
 		@Override
 		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
-		/*Bool val;
-		BoolNode(bool n) { val = n; }
-
-		@Override
-		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visit(this); }
-		*/
 	}
+
 }

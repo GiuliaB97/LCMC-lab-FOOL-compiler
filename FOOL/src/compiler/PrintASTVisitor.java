@@ -36,6 +36,36 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
         return null;
 	}
 
+	///
+	@Override
+	public Void visit(EqualNode n) {
+		if (print) printNode(n);
+		visit(n.left);
+		visit(n.right);
+        return null;		
+	}
+
+	@Override
+	public Void visit(BoolNode n) {
+		if (print) printNode(n,": "+n.val);
+		return null;
+	}
+	
+	@Override	
+	public Void visit(IfNode n) {
+		if (print) printNode(n);
+		visit(n.cond);
+		visit(n.th);
+		visit(n.el); 
+        return null;		
+	}
+
+	@Override	
+	public Void visit(PrintNode n) {
+		if (print) printNode(n);
+		visit(n.exp); 
+        return null;		
+	}
 }
 
 	//il dynamic binding funziona solo sul soggetto che chiama il metodo non sui suoi parametri; in questo caso risolve il problema del biding a tempo statico non a run time

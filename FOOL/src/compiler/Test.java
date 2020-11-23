@@ -23,12 +23,13 @@ public class Test {
         
         System.out.println("Generating AST");
         
-        ASTGenerationSTVisitor astGenVisitor = new ASTGenerationSTVisitor();
-        Node ast = astGenVisitor.visit(st);
+        ASTGenerationSTVisitor astGenVisitor = new ASTGenerationSTVisitor();		//tutta sta sbatta è perchè io non voglio più l'ST ma l'ABS: 
+        																			// quindi voglio una versione compatta dove decido cosa ignorare.
+        Node ast = astGenVisitor.visit(st);											//per generarlo devo visitarlo(?)
         
         System.out.println("Visualizing AST...");
         
-    	new PrintASTVisitor().visit(ast);
+    	new PrintASTVisitor().visit(ast);											//boh
 
         System.out.println("Calculating program value...");        
         System.out.println("Program value is: "+new CalcASTVisitor().visit(ast));

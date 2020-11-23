@@ -32,7 +32,32 @@ public class CalcASTVisitor extends BaseASTVisitor<Integer> {
         return n.val;
 	}
 
+///
+	@Override
+	public Integer visit(EqualNode n) {
+		if (print) printNode(n);
+	    return visit(n.left)==visit(n.right)?1:0; 
+	}
+
+	@Override
+	public Integer visit(BoolNode n) {
+		if (print) printNode(n);
+	    return n.val?1:0; 
+	}
+	
+	@Override	
+	public Integer visit(IfNode n) {
+		if (print) printNode(n);
+	    return visit(n.cond)==1?visit(n.th):visit(n.el); 
+	}
+
+	@Override	
+	public Integer visit(PrintNode n) {
+		if (print) printNode(n);
+	    return visit(n.exp); 
+	}	
 }
+
 	//il dynamic binding funziona solo sul soggetto che chiama il metodo non sui suoi parametri; in questo caso risolve il problema del biding a tempo statico non a run time
 	//binding connessione tra il chiamante e il chiamato
 	//vede che il chiamante è node e quindi questa cosa a runtime non cambia
