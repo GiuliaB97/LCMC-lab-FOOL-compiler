@@ -3,10 +3,19 @@ package compiler;
 import compiler.AST.*;
 import compiler.lib.*;
 
+
+/*
+ * RIGUARDA E CHIEDI AIUTO IL DISCORSO NON E' CHIARO!!!!!!!!!!!!!
+ */
+
+//legame con ANTLR che rifugge dall'overloading : lui ha una gerarhia noi abbiamo dei nodi che stanno per i fatti loro.
 public class PrintASTVisitor extends BaseASTVisitor<Void> {
 
 	PrintASTVisitor() { super(true); }
-
+	/*le visit sono diventate visitNode per evitare criticità con l'verloading di Java: prima usavamo 
+	 * solo visit chiamandolo su un node gnereico (java si basa sul tipo statico dell'argomento non dinamico; 
+	 * quindi la eseguiva sul node che pi trasformava l'ggetto in soggetto
+	 */
 	@Override
 	public Void visitNode(ProgNode n) {
 		printNode(n);
@@ -100,7 +109,13 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 	public Void visitNode(FunNode n) {
 		printNode(n,n.id);
 		visit(n.retType);
-		// for (ParNode par : n.parlist) visit(par);
+		// for (ParNode par : n.parlist) visit(par); 
+														/*di che tipo statico è par(?) par node così chiamarebbe direttamente parnode 
+														 * senza chiamare node che chiama accept-> problema per quello che riguarda l'indentazione
+														 * Soluzioni: fare una var node, far un cast (in particolare un upcast)
+														 * CHIEDI AIUTO
+														 */
+													
 		for (Node dec : n.declist) visit(dec);
 		visit(n.exp);
 		return null;
@@ -114,7 +129,7 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 
 	@Override
 	public Void visitNode(CallNode n) {
-		printNode(n,n.id);
+		printNode(n,n.id);							//non usa più i due punti: cambierà qualcosa: BOH riguardaci splittando la finestra (vecchio codice codice nuovo)
 		// for (Node arg : n.arglist) visit(arg);
 		return null;
 	}
