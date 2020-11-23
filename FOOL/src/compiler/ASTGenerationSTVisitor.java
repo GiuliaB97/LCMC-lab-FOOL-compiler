@@ -10,6 +10,23 @@ import compiler.FOOLParser.*;
 import compiler.lib.*;
 import static compiler.lib.FOOLlib.*;
 
+/*
+ * I metodi di visita sono presentati nello stesso ordine della grammatica; per gli elementi sintattici che già c'erano non è cambiato nulla;
+ * l'unica differenza è che nella stampa è stata messa una cosa automatica: utilizzando la reflection: idea metto 'var : prod applicata'
+ * andando ad indagare tramite reflection sul tipo di C: quando va ad analizzarre il simbolo va nella grammatica .g4 e prende il nome che segue # ossia il nome della classe
+ * per recuperare exp devo guardare da che classe eredita la c considerata; le prod di una variabili ereditano da ...
+ * es c è un paramentro con la sua classe ottengo times e poi vedo che eredeita da exp e lo metto dopo i due punti (?)
+ * 
+ *  Quando ho un unica produzione faccio il visit solo sul progcontext perchè quello è il nodo dell'albero e la produzione appplicata è l'unica che c'è
+ */
+/**
+ * Bool node: valore node (è una foglia ) 
+ * Booltype node : rappresentano il tipo dei paramentri delle produzioni/variabili/tipi
+ * 
+ * discorso analogo vale per int
+ * @author giuliabrugnatti
+ *
+ */
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
 	String indent;
@@ -30,15 +47,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
     	System.out.println(indent+prefix+lowerizeFirstChar(extractCtxName(ctxClass.getName())));    //prefisso nome var : prodction # e nome vero della var
     																								//nb se ctx conteneva già il nome della var prefix resta vuoto e stampodirettamente il nome della var 
     }
-    /*
-     * I metodi di visita sono presentati nello stesso ordine della grammatica; per gli elementi sintattici che già c'erano non è cambiato nulla;
-     * l'unica differenza è che nella stampa è stata messa una cosa automatica: utilizzando la reflection: idea metto 'var : prod applicata'
-     * andando ad indagare tramite reflection sul tipo di C: quando va ad analizzarre il simbolo va nella grammatica .g4 e prende il nome che segue # ossia il nome della classe
-     * per recuperare exp devo guardare da che classe eredita la c considerata; le prod di una variabili ereditano da ...
-     * es c è un paramentro con la sua classe ottengo times e poi vedo che eredeita da exp e lo metto dopo i due punti (?)
-     * 
-     *  Quando ho un unica produzione faccio il visit solo sul progcontext perchè quello è il nodo dell'albero e la produzione appplicata è l'unica che c'è
-     */
+    
     
     @Override
 	public Node visit(ParseTree t) {
@@ -48,21 +57,38 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
         indent=temp;
         return result; 
 	}
-
+/*
+ * Introdotto passaggio intermedio al progbody: lui restituisce il node che gli restituisce la vsiita al prog body
+ */
 	@Override
 	public Node visitProg(ProgContext c) {
 		if (print) printVarAndProdName(c);
 		return visit(c.progbody());
 	}
+	
+	/*
+	 * Caso del LET IN
+	 * sto costruendo l'ast quello che devo fare è:
+	 * creare un nodo apposta(al posto del progviisto)
+	 * questo nodo si chiamerà ProgLetInNode(?9
+	 * 
+	 */
 
 	@Override
 	public Node visitLetInProg(LetInProgContext c) { 
 		if (print) printVarAndProdName(c);
-		for (DecContext dec : c.dec()) visit(dec);
+		List<Node> declist =new ArrayList<>();
+		for (DecContext dec : c.dec())  declist.add(visit(dec));		/*ciclo su tutti i figli dec (le dichairazioni delle var) c.dec: 
+																			restituisce una lista di tutti i figli dell'albero sintattico di dec; io li scorro tutti chiamandoci una visita;
+																			 che ci faccio con sti node li colleziono e li menttto in un campo declist
+																			*/
 		visit(c.exp());
-		return null;
+		return new ProgLetInNode(declist, visit(c.exp()));
 	}
 
+	/*
+	 * VIsita a quello senza dichiarazioni
+	 */
 	@Override
 	public Node visitNoDecProg(NoDecProgContext c) {
 		if (print) printVarAndProdName(c);
@@ -92,28 +118,39 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		if (print) printVarAndProdName(c);
 		visit(c.type()); 
 		visit(c.exp());
-        return null;
+        Node n= new VarNode(c.ID().getText(), visit(c.type()), visit(c.exp()));/*Creo un nuovo nodo con il nome della var, il tipo(?) e ...(?) e
+																		         il numero della linea in cui appare nel src con  tutta sta roba la metto
+																		          in una var per settare il campo del node in modo da sapere in che linea si trova
+																		         */
+        n.setLine(c.VAR().getSymbol().getLine());//questo mi ricorda il numero di linea
+        
+        return n;
 	}
 
 	@Override
 	public Node visitFundec(FundecContext c) {
 		if (print) printVarAndProdName(c);
+		List<Node> declist =new ArrayList<>();
 		for (DecContext dec : c.dec()) visit(dec);
 		visit(c.type(0)); 
-		visit(c.exp());
-		return null;
+		Node n= new FunNode(c.ID(0).getText(), visit(c.type(0)),declist, visit(c.exp()));//occhio che qui ho più di un ID quindi devo specificare in quale nodo trovo il nome della funzione   
+																							//in generale quando chiamo la visita su un tipo finisco in inttype o in bool tuyp che crearanno un bool type node o un intype node
+		n.setLine(c.FUN().getSymbol().getLine());//questo mi recupera il numero di linea
+	
+		return n;
+			
 	}
 
 	@Override
 	public Node visitIntType(IntTypeContext c) {
 		if (print) printVarAndProdName(c);
-		return null;
+		return new IntTypeNode();					//ricontrolla
 	}
 
 	@Override
 	public Node visitBoolType(BoolTypeContext c) {
 		if (print) printVarAndProdName(c);
-		return null;
+		return new BoolTypeNode();					//ricontrilla
 	}
 
 	@Override
@@ -157,15 +194,28 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitId(IdContext c) {
+	public Node visitId(IdContext c) {				/*
+														dichiarazione di una var
+													*/
 		if (print) printVarAndProdName(c);
-		return null;
+		Node n= new IdNode(c.ID().getText());
+		n.setLine(c.ID().getSymbol().getLine());//questo mi ricorda il numero di linea
+		
+		return n;
 	}
 
 	@Override
-	public Node visitCall(CallContext c) {
+	public Node visitCall(CallContext c) {	
+												/*
+												 * chiamata a funzione
+												 */
+		STentry entry; 							//NOT SURE
+												//campo dove attaccare la pallina
 		if (print) printVarAndProdName(c);
-		return null;
+		Node n= new CallNode(c.ID().getText());
+		n.setLine(c.ID().getSymbol().getLine());//questo mi ricorda il numero di linea
+		
+		return n;
 	}
 }
 

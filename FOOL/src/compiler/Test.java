@@ -26,17 +26,17 @@ public class Test {
         Node ast = visitor.visit(st); //generazione AST 
 
     	System.out.println("Visualizing AST...");
-    	new PrintASTVisitor().visit(ast);
+    	new PrintEASTVisitor().visit(ast);
         
-//        System.out.println("Enriching AST.");
-//        
-//        SymbolTableASTVisitor symtableVisitor = new SymbolTableASTVisitor();
-//        symtableVisitor.visit(ast);
-//
-//        System.out.println("You had: "+symtableVisitor.stErrors+" symbol table errors.\n");
-//        
-//        System.out.println("Visualizing Enriched AST...");
-//        new PrintEASTVisitor().visit(ast);    
+        System.out.println("Enriching AST.");
+        
+        SymbolTableASTVisitor symtableVisitor = new SymbolTableASTVisitor();
+        symtableVisitor.visit(ast);
+
+        System.out.println("You had: "+symtableVisitor.stErrors+" symbol table errors.\n");
+        
+        System.out.println("Visualizing Enriched AST...");
+        new PrintEASTVisitor().visit(ast);    
 
     }
 

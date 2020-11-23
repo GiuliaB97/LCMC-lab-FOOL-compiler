@@ -9,13 +9,15 @@ import compiler.lib.*;
  */
 
 //legame con ANTLR che rifugge dall'overloading : lui ha una gerarhia noi abbiamo dei nodi che stanno per i fatti loro.
-public class PrintASTVisitor extends BaseASTVisitor<Void> {
+public class PrintEASTVisitor extends BaseEASTVisitor<Void> {
 
-	PrintASTVisitor() { super(true); }
+	PrintEASTVisitor() { super(true); }
+	
 	/*le visit sono diventate visitNode per evitare criticità con l'verloading di Java: prima usavamo 
 	 * solo visit chiamandolo su un node gnereico (java si basa sul tipo statico dell'argomento non dinamico; 
 	 * quindi la eseguiva sul node che pi trasformava l'ggetto in soggetto
 	 */
+	
 	@Override
 	public Void visitNode(ProgNode n) {
 		printNode(n);
@@ -124,6 +126,7 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 	@Override
 	public Void visitNode(IdNode n) {
 		printNode(n,n.id);
+		if(n.entry!=null) visitSTentry(n.entry);
 		return null;
 	}
 
@@ -131,16 +134,17 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 	public Void visitNode(CallNode n) {
 		printNode(n,n.id);							//non usa più i due punti: cambierà qualcosa: BOH riguardaci splittando la finestra (vecchio codice codice nuovo)
 		// for (Node arg : n.arglist) visit(arg);
+		if(n.entry!=null) visitSTentry(n.entry);
+		return null;
+	}
+	@Override
+	public Void visitSTentry(STentry entry) {
+		//printSTentry("nestlev "+ entry);						//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 		return null;
 	}
 }
 
-//@Override
-//public Void visitSTentry(STentry entry) {
-//	printSTentry("nestlev "+entry.nl);
-//	return null;
-//}
-//
+
 //@Override
 //public Void visitNode(ArrowTypeNode n) {
 //	printNode(n);

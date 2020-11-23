@@ -123,6 +123,8 @@ public class AST {
 
 	public static class IdNode extends Node {
 		String id;
+		STentry entry;
+		
 		IdNode(String i) {id = i;}
 
 		@Override
@@ -131,6 +133,8 @@ public class AST {
 
 	public static class CallNode extends Node {
 		String id;
+		STentry entry;
+		
 		// List<Node> arglist;
 		CallNode(String i /*, List<Node> p */) {id = i; /* arglist = p; */}
 

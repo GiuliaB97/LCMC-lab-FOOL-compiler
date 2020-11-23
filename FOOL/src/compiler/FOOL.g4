@@ -8,15 +8,18 @@ public int lexicalErrors=0;
  * PARSER RULES
  *------------------------------------------------------------------*/
   
+   /*
+    * ricorda le variabile puoi assegnarle solo nel momento in cui vengono dichiarate
+    */
 prog  : progbody EOF ;
      	
 progbody : LET dec+ IN exp SEMIC  #letInProg 	/*let dichiarazioni locali in codice senza dichiarazioni
 												* LET dec+: ho almeno una dichairazion eper via della chiusura positiva
 												* se non ho dichiarazioni LET IN lo ometto completamente: scrivo direttamente il corpo della funzione
 												*/
-         | exp SEMIC              #noDecProg	//ho un programma senza dichiarazioni
+         | exp SEMIC              #noDecProg	/*ho un programma senza dichiarazioni*/
          ;
- //ricorda le variabile puoi assegnarle solo nel momento in cui vengono dichiarate
+
 dec : VAR ID COLON type ASS exp SEMIC  #vardec									//dichiarazioni di variabili 	NB var è un token nuovo
     
     						//varName : int
@@ -31,6 +34,7 @@ dec : VAR ID COLON type ASS exp SEMIC  #vardec									//dichiarazioni di variab
 																						print(x+y)
 																					}
           																		 */
+          																		 
 exp     : exp TIMES exp #times
         | exp PLUS  exp #plus
         | exp EQ  exp   #eq 
@@ -85,6 +89,7 @@ WHITESP  : ( '\t' | ' ' | '\r' | '\n' )+    -> channel(HIDDEN) ;
 
 COMMENT : '/*' (.)*? '*/' -> channel(HIDDEN) ;
  
-ERR   	 : . { System.out.println("Invalid char: "+ getText()) "at line" + getLine(); lexicalErrors++; } -> channel(HIDDEN); 
+ 
+ERR   	 : . { System.out.println("Invalid char: "+ getText() +"at line" + getLine()); lexicalErrors++; } -> channel(HIDDEN); 
 
 
