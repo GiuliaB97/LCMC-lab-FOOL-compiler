@@ -5,6 +5,7 @@ import compiler.FOOLParser.*;
 import compiler.AST.*;
 import compiler.lib.*;
 
+//'ASTGeneration': perchè sto facendo questa cosa: per generare l'AST 'STVisitor': suffisso cosa sto visitando le classi context
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
 	String indent;
@@ -27,7 +28,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitHighPriOp(HighPriOpContext c) {
 		System.out.println(indent+"exp: prod with TIMES");
-		return new TimesNode( visit(c.exp(0)), visit(c.exp(1)) );
+		return new TimesNode( visit(c.exp(0)), visit(c.exp(1)) ); //quando stampiamo stiamo dicendo inq uel punto dell'albero cosa c'è; in quel punto dell'albero c'è exp che ha come figli quelli della produzione times exp TIMES exp (cioè quello che vado a stampare con le visite
 	}
 
 	@Override
@@ -39,7 +40,8 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitLowPriOp(LowPriOpContext c) {
 		System.out.println(indent+"exp: prod with EQ");
-		return new EqualNode( visit(c.exp(0)), visit(c.exp(1)) );
+		return new EqualNode( visit(c.exp(0)), visit(c.exp(1)) ); //exp(0): ciò che c'è prima del '=='
+																	// queste mi ritorneranno un node che sarà la radice del sotto albero
 	}
 	
 	@Override
@@ -71,8 +73,8 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
 	@Override
 	public Node visitIf(IfContext c) {
-		System.out.println(indent+"exp: prod with IF THEN CLPAR CRPAR ELSE CLPAR CRPAR");
-		return new IfNode( visit(c.exp(0)), visit(c.exp(1)), visit(c.exp(2)) );
+		System.out.println(indent+"exp: prod with IF THEN CLPAR CRPAR ELSE CLPAR CRPAR"); //questo nodo exp ha come figli exp0, exp1, exp2,  e  IF THEN CLPAR CRPAR ELSE CLPAR CRPAR : tutti i figli che 
+		return new IfNode( visit(c.exp(0)), visit(c.exp(1)), visit(c.exp(2)) ); 
 	}
 
 	@Override

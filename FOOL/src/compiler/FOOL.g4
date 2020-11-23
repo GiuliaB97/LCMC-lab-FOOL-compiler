@@ -8,7 +8,8 @@ int lexicalErrors=0;
 /*------------------------------------------------------------------
  * PARSER RULES
  *------------------------------------------------------------------*/
- 
+ //il corpo del programma è un expr che ritorna un valore perchè siamo in un linguaggio funzionale
+ //noi gli statement non li abbiamo tutto è una funzione.
 prog    : exp SEMIC EOF ; //ogni istruzione viene terminata da ;
  //considero un'operazione a ogni livello per semplicità ; è simile a simpleexp
  //FOOL: linguaggio che creiamo: Functional Object Oriented Language
@@ -19,11 +20,11 @@ exp     : exp TIMES exp                 #highPriOp
     	| MINUS? NUM                    #integer        
 	    | TRUE                          #true           //
 	    | FALSE                         #false          //
-	    //siamo in linguaggio funzionale sta roba ritorna un valore: nei linguaggi funzionali è implicito che ritorni un valore 
+	    //siamo in linguaggio funzionale sta roba ritorna un valore: nei linguaggi funzionali è implicito che ritorni un valore o per l'else o per l'if 
 	    /*print( if (5+3)*-7 == 9  then { 8 } else { false }); Sta roba torno zero e come sideeffct stampa zero*/
 	    | IF exp THEN CLPAR exp CRPAR 
 	             ELSE CLPAR exp CRPAR   #if             //
-	    | PRINT LPAR exp RPAR           #print          //
+	    | PRINT LPAR exp RPAR           #print          // resstituisce lo stesso valore dell'expr
         ;  		
   		
 /*------------------------------------------------------------------

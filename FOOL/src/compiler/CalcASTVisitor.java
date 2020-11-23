@@ -10,7 +10,7 @@ public class CalcASTVisitor extends BaseASTVisitor<Integer> {
     
 	@Override
 	public Integer visit(ProgNode n) {
-	   if (print) printNode(n);
+	   if (print) printNode(n);			//qui la stampa è opzionale perchè non usiamo il costruttore di default
 	   return visit(n.exp);
 	}
 
@@ -36,7 +36,7 @@ public class CalcASTVisitor extends BaseASTVisitor<Integer> {
 	@Override
 	public Integer visit(EqualNode n) {
 		if (print) printNode(n);
-	    return visit(n.left)==visit(n.right)?1:0; 
+	    return visit(n.left)==visit(n.right)?1:0; //lavoriamo con java quindi 1:true e 0: false
 	}
 
 	@Override

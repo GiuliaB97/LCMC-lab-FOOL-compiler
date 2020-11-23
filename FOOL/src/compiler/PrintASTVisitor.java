@@ -2,6 +2,9 @@ package compiler;
 
 import compiler.AST.*;
 import compiler.lib.*;
+//PrintASTVisitor: visitot l'AST e cosa faccio stampo
+
+//la stampa del nome viene fatta direttaemnte con la reflection 
 
 public class PrintASTVisitor extends BaseASTVisitor<Void> {
 
@@ -39,7 +42,7 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 	///
 	@Override
 	public Void visit(EqualNode n) {
-		if (print) printNode(n);
+		printNode(n);
 		visit(n.left);
 		visit(n.right);
         return null;		
@@ -47,13 +50,13 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 
 	@Override
 	public Void visit(BoolNode n) {
-		if (print) printNode(n,": "+n.val);
+		printNode(n,": "+n.val);
 		return null;
 	}
 	
 	@Override	
 	public Void visit(IfNode n) {
-		if (print) printNode(n);
+		printNode(n);
 		visit(n.cond);
 		visit(n.th);
 		visit(n.el); 
@@ -62,7 +65,7 @@ public class PrintASTVisitor extends BaseASTVisitor<Void> {
 
 	@Override	
 	public Void visit(PrintNode n) {
-		if (print) printNode(n);
+		printNode(n);
 		visit(n.exp); 
         return null;		
 	}
