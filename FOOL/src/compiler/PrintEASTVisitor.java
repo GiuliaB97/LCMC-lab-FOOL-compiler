@@ -71,13 +71,6 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void> {
 		return null;
 	}
 	
-	@Override
-	public Void visitNode(PrintNode n) {
-		printNode(n);
-		visit(n.exp);
-		return null;
-	}
-
 //	
 	@Override
 	public Void visitNode(ProgLetInNode n) {
@@ -132,23 +125,21 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void> {
 
 	@Override
 	public Void visitNode(CallNode n) {
-		printNode(n,n.id);							//non usa più i due punti: cambierà qualcosa: BOH riguardaci splittando la finestra (vecchio codice codice nuovo)
+		printNode(n,n.id);							
 		// for (Node arg : n.arglist) visit(arg);
 		if(n.entry!=null) visitSTentry(n.entry);
 		return null;
 	}
 	@Override
+	public Void visitNode(PrintNode n) {
+		printNode(n);
+		visit(n.exp);
+		return null;
+	}
+
+	@Override
 	public Void visitSTentry(STentry entry) {
-		//printSTentry("nestlev "+ entry);						//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+		printSTentry("nestlev "+entry.nl);
 		return null;
 	}
 }
-
-
-//@Override
-//public Void visitNode(ArrowTypeNode n) {
-//	printNode(n);
-//	for (Node par: n.parlist) visit(par);
-//	visitArrow(n.ret);
-//	return null;
-//}

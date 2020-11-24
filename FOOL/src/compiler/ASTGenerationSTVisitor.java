@@ -203,14 +203,12 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		
 		return n;
 	}
-
+	/*
+	 * chiamata a funzione
+	 */
 	@Override
 	public Node visitCall(CallContext c) {	
-												/*
-												 * chiamata a funzione
-												 */
-		STentry entry; 							//NOT SURE
-												//campo dove attaccare la pallina
+												
 		if (print) printVarAndProdName(c);
 		Node n= new CallNode(c.ID().getText());
 		n.setLine(c.ID().getSymbol().getLine());//questo mi ricorda il numero di linea

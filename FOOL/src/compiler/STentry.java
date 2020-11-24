@@ -12,7 +12,8 @@ public class STentry implements Visitable {
 	/*
 	 * Quando creo la pallina la creo già col nesting level; quando incontro una dichiarazione di un identificatore; creo una pallina stentry specificando a quale nesting level questa si trova
 	 */
-	public STentry(int n) {}
+	int nl;
+	public STentry(int n) {nl=n;}
 
 
 	@Override

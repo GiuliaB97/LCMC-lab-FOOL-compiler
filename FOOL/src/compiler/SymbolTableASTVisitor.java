@@ -160,8 +160,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
 		visit(n.exp);								//visito il corpo della mia funzione che può usare cose locali o cose in nesting level inferiori (finoa d arrivare a zero)
 		
 		//prima di terminare devo uscire dallo scope
-		this.symTable.remove(nestingLevel);
-		this.nestingLevel--;
+		this.symTable.remove(nestingLevel--);
 		return null;
 	}
 
@@ -186,14 +185,19 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
 			this.stErrors++;
 		}else {//se la trovo attacco la pallina decorando con la dichiarazione con gli usi
 			n.entry=entry;//attacco la pallina
-			
 		}
 		return null;
 	}
 
 	@Override
 	public Void visitNode(CallNode n) {
-		if (print) printNode(n);
+		if(print) printNode(n);
+		STentry entry = stLookup(n.id);
+		if (entry == null) {
+			System.out.println("Fun id " + n.id + " at line "+ n.getLine() + " not declared");
+			stErrors++;
+		} else 
+			n.entry = entry;
 		// for (Node arg : n.arglist) visit(arg);
 		return null;
 	}
