@@ -35,7 +35,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
 
 	@Override
 	public Void visitNode(ProgNode n) {
-		if (print) printNode(n);
+		if (print) printNode(n);		//ricorda print è un campo della classe BaseASTVisitor
 		visit(n.exp);
 		return null;
 	}
@@ -109,8 +109,8 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
 		if (print) printNode(n);
 		Map<String, STentry>hm= new HashMap<>();	//tabella che conterrà le dichiarazioni dell'ambiente globale
 		symTable.add(hm); 							//aggiungo la tabella alla mia symbol table
-		for (Node dec : n.declist) visit(dec);		//visito le dichiarazioni
-		visit(n.exp);								//visito il corpo che userà le dichairazioni
+		for (Node dec : n.declist) visit(dec);		//visito le dichiarazioni contenute nella let in 													
+		visit(n.exp);								//visito il corpo che userà le dichiarazioni
 		symTable.remove(0);							//ide ala hashmap cresce quando entro in scope e decresce quando esco quando finisce il programma posso buttare via tutto (rimuovo quella dell'abiente globale perchè le altre teoricamente le ho già rimosse tutte)
 		return null;
 	}
@@ -122,11 +122,14 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
 		if (print) printNode(n,n.id);				
 													//vado ad inserire nella tabella che sta al fronte della lista l'id della variabile , ma devo vedere se c'è già
 													//questo lavoro va fatto prima o dopo la visita a exp? Prima.
-		visit(n.exp);
+		visit(n.exp);								//exp è il copoche userà le dichiarazioni
 		Map<String, STentry>hm=this.symTable.get(nestingLevel); //mi da la tabella dello scope corrente
 		STentry entry = new STentry(nestingLevel);				//Creo un anuova pallina
-		if(hm.put(n.id, entry)!=null) {				//inserimento id nella symboltable, ma devo controllare se c'era già (in Java il metodo put controlla se la chiave c'era già se put torna null la chiave non esisteva se c'era già ritorna il valore della vecchia chiave
-
+		if(hm.put(n.id, entry)!=null) {				/*inserimento id nella symboltable, 
+													ma devo controllare se c'era già (in Java 
+													il metodo put controlla se la chiave c'era già se put 
+													torna null la chiave non esisteva se c'era già ritorna 
+													il valore della vecchia chiave*/
 			System.out.println("Var id " + n.id + " at line "+ n.getLine() +" already declared");
 			this.stErrors++;
 		}

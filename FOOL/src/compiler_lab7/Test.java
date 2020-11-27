@@ -28,11 +28,11 @@ public class Test {
         
         ASTGenerationSTVisitor astGenVisitor = new ASTGenerationSTVisitor();		//tutta sta sbatta è perchè io non voglio più l'ST ma l'ABS: 
         																			// quindi voglio una versione compatta dove decido cosa ignorare.
-        Node ast = astGenVisitor.visit(st);											//per generarlo devo visitarlo(?)
+        Node ast = astGenVisitor.visit(st);											//per generarlo devo visitare il parse tree
         
         System.out.println("Visualizing AST...");
         
-    	new PrintASTVisitor().visit(ast);											//boh
+    	new PrintASTVisitor().visit(ast);											//boisito il tree
 
         System.out.println("Calculating program value...");        
         System.out.println("Program value is: "+new CalcASTVisitor().visit(ast));

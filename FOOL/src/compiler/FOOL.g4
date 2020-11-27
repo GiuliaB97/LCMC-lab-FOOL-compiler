@@ -45,7 +45,11 @@ exp     : exp TIMES exp #times
 	    | IF exp THEN CLPAR exp CRPAR ELSE CLPAR exp CRPAR  #if   
 	    | PRINT LPAR exp RPAR #print
 	    | ID #id									//se id compare in una expr allora è una variabile
-	    | ID LPAR (exp (COMMA exp)* )? RPAR #call	//se id compare seguito da una parentesi allora ho una funzione. Sta roba complicata (exp (COMMA exp)* )?  serve per gestire i casi in cui ci siano o meno argomenti passati alla funzione
+	    | ID LPAR (exp (COMMA exp)* )? RPAR #call	/*se id compare seguito da una parentesi allora ho una funzione. 
+	    											* Sta roba complicata (exp (COMMA exp)* )?  serve per gestire i casi 
+	    											* in cui ci siano o meno argomenti passati alla funzione
+	    											* 
+	    											*/
         ; 
              
 type    : INT #intType

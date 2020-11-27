@@ -8,7 +8,7 @@ public class ExecuteVM {
     public static final int MEMSIZE = 10000;
     
     private int[] code;
-    private int[] memory = new int[MEMSIZE];
+    private int[] memory = new int[MEMSIZE]; // è lo stack
     
     private int ip = 0; /*	Instruction pointer: ci sta l'indirizzo dell'istruzione da eseguire; 
      					* 	è un po' come l' 'i' di prima ma sta volta eseguiamo;
@@ -93,7 +93,8 @@ public class ExecuteVM {
             address = pop();
             memory[address] = pop();    
             break;
-          case SVMParser.LOADW : //
+          case SVMParser.LOADW : // pop restituisce un numero accede all'indice dell'array memory c'è un valore
+        	  					// la load prende il valore in memory e lo mette in cima allo stack
             push(memory[pop()]);
             break;
           case SVMParser.JS : //

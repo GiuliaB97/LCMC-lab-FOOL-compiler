@@ -1,9 +1,14 @@
 package compiler_lab7;
 
 import compiler.lib.*;
-//Syntax Tree albero di parsing che data una grammatica e una stringa appartenente ad essa c'è un albero in cui questa si può leggere nelle foglie; questo viente generato da antlr
-//Noi partiamo da questa versione concreta dell'albero e gneriamo una versione astratta
-//rappresentata da questi nodi;
+/*Syntax Tree albero di parsing che data una grammatica e 
+*una stringa appartenente ad essa c'è un albero in cui questa 
+*si può leggere nelle foglie; 
+*questo viene generato da antlr.
+*
+*Noi partiamo da questa versione concreta dell'albero e generiamo una versione astratta
+*rappresentata da questi nodi;
+*/
 
 ///node è l'interfaccia che ha il metodo accept
 

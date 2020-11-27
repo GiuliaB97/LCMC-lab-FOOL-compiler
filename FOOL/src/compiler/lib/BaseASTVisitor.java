@@ -34,7 +34,8 @@ public class BaseASTVisitor<S> {
 			return visitByAcc(v);
 	}
 
-	S visitByAcc(Visitable v) { 
+	S visitByAcc(Visitable v) { /*qui fa il dynamic binding sul 
+									tipo corretto*/
 		return v.accept(this);
 	}
 

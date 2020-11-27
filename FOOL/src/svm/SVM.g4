@@ -16,16 +16,24 @@ int lexicalErrors=0;
 }
 
 @parser::members {
-int[] code = new int[ExecuteVM.CODESIZE];  /*code è un array di interi che conterrà il codice oggetto
- 											*creato vuoto; con sta costante,
- 											* idea tutte le volte che vedo un'istruzione vado a popolare l'array code''
+int[] code = new int[ExecuteVM.CODESIZE];  /* code è un array di interi che conterrà il codice oggetto
+ 											* creato vuoto; con sta costante,
+ 											* idea tutte le volte che vedo un'istruzione vado a 
+ 											* popolare l'array code''
  											* ed incremento la i
- 											* occhio: non stiamo eseguendo ma stiamo trasformando il resto in numeri
+ 											* occhio: non stiamo eseguendo ma stiamo 
+ 											* trasformando il resto in numeri
  											*  */  
 private int i = 0; /*non stiamo eseguendo ma trasformando il testo in numeri la i verrà incrementata */
-					/* ad ogni token viene associato in maniera automatica da antlr un numero(SVM.tokens) */
-private HashMap<String,Integer> labelDef = new HashMap<String,Integer>();
-private HashMap<Integer,String> labelRef = new HashMap<Integer,String>();
+					/* ad ogni token viene associato in maniera automatica da antlr 
+					 * un numero(SVM.tokens)
+					 */
+private HashMap<String,Integer> labelDef = new HashMap<String,Integer>();	/* chiave id numerico
+																			 * le chiavi push pop 
+																			 */ 
+private HashMap<Integer,String> labelRef = new HashMap<Integer,String>();	/* id numerico chiave
+																			 * un numero per ogni token
+																			 */
 }
 
 
@@ -35,21 +43,28 @@ private HashMap<Integer,String> labelRef = new HashMap<Integer,String>();
 //assembly è il nostro S grande (variabile iniziale)
 //instruction *EOF: insieme di istruzioni $
 //S -> insieme di istruzioni $
-assembly: instruction* EOF {for(Integer j: labelRef.keySet())
-							code[j]=labelDef.get(labelRef.get(j));/*questo è quello che vado a mettere come indirizzo nel buco*/
+assembly: instruction* EOF {for(Integer j: labelRef.keySet()) /*
+ * recuperare il token che a chiave j
+ */
+							code[j]=labelDef.get(labelRef.get(j));/*
+							 * dato l'id numerico recupero il simbolo ad esso asssociato e lo salvo nell'array contennte tutto il programma 
+							 * questo è quello che vado a 
+																* mettere come indirizzo nel buco*/
 							}; 
 
 instruction:
         PUSH n=INTEGER{	code[i++] = PUSH;	
-        				code[i++] =	Integer.parseInt($n.text);}	
+        				code[i++] =	Integer.parseInt($n.text);}	//recupera il valore 
         											/*push INTEGER on the stack;
         											n mi da la possibilità di accedere al lessema che ha matchato con integer
         				  							push è un valore numerico che possiamo mettere dentro un array di interi: 
         											code parte  da 0 va avanti; code è l'array che conterrà la nostra roba
         											NB ho bisogno di due caselle perchè mi serve l'argomento*/
 	  | PUSH l=LABEL{code[i++] = PUSH;			
-		  			labelRef.put(i++, $l.text);}	/*push the location address pointed by LABEL on the stack;
-		  				 							* mettere sullo stack l'indirizzo a cui è associato lab
+		  			labelRef.put(i++, $l.text);}	/*push the location address pointed by 
+													LABEL on the stack;
+		  				 							* mettere sullo stack l'indirizzo a cui
+		  				 							 è associato lab
 		  				 							*/	     
 	  | POP		{code[i++] = POP;}					//pop the top of the stack ; non ha argomenti
 	  | ADD		{code[i++] = ADD;}					//replace the two values on top of the stack with their sum; ha argomenti implici perchè lavora con lo stack
@@ -61,8 +76,8 @@ instruction:
 
 	  | STOREW	{code[i++] = STOREW;}				///pop two values: 
 	  												//  the second one is written at the memory address pointed by the first one
-	  | LOADW  {code[i++] = LOADW;}   				///read the content of the memory cell pointed by the top of the stack
-	                								//  and replace the top of the stack with such value
+	  | LOADW  {code[i++] = LOADW;}   	/// read the content of the memory cell pointed by the top of the stack
+	                					//  and replace the top of the stack with such value
 	  
 	  /*
 	   * COme gestire le label : se abbiamo un jump pippo prima di pippo : lasciamo il buco finchè non incrontiamo pippo : 
@@ -76,7 +91,8 @@ instruction:
 	  | l=LABEL COL {labelDef.put($l.text,i);}  //LABEL points at the location of the subsequent instruction; 
 	  											//non devo incrementare perchè essendo che postincremento i è già l'indirizzo dell'istruzione successiva
 	  | BRANCH l=LABEL {	code[i++] = BRANCH;			
-	  						labelRef.put(i++, $l.text);}  //jump at the instruction pointed by LABEL
+	  						labelRef.put(i++, $l.text);}  //il nome della label che gli diamo (label1, label2)
+	  						//jump at the instruction pointed by LABEL
 	  | BRANCHEQ l=LABEL {	code[i++] = BRANCHEQ;			
 	  						labelRef.put(i++, $l.text);}    //pop two values and jump if they are equal
 	  | BRANCHLESSEQ l=LABEL {	code[i++] = BRANCHLESSEQ;			

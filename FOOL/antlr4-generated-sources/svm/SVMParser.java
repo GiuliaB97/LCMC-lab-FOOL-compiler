@@ -97,16 +97,24 @@ public class SVMParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	int[] code = new int[ExecuteVM.CODESIZE];  /*code � un array di interi che conterr� il codice oggetto
-	 											*creato vuoto; con sta costante,
-	 											* idea tutte le volte che vedo un'istruzione vado a popolare l'array code''
+	int[] code = new int[ExecuteVM.CODESIZE];  /* code � un array di interi che conterr� il codice oggetto
+	 											* creato vuoto; con sta costante,
+	 											* idea tutte le volte che vedo un'istruzione vado a 
+	 											* popolare l'array code''
 	 											* ed incremento la i
-	 											* occhio: non stiamo eseguendo ma stiamo trasformando il resto in numeri
+	 											* occhio: non stiamo eseguendo ma stiamo 
+	 											* trasformando il resto in numeri
 	 											*  */  
 	private int i = 0; /*non stiamo eseguendo ma trasformando il testo in numeri la i verr� incrementata */
-						/* ad ogni token viene associato in maniera automatica da antlr un numero(SVM.tokens) */
-	private HashMap<String,Integer> labelDef = new HashMap<String,Integer>();
-	private HashMap<Integer,String> labelRef = new HashMap<Integer,String>();
+						/* ad ogni token viene associato in maniera automatica da antlr 
+						 * un numero(SVM.tokens)
+						 */
+	private HashMap<String,Integer> labelDef = new HashMap<String,Integer>();	/* chiave id numerico
+																				 * le chiavi push pop 
+																				 */ 
+	private HashMap<Integer,String> labelRef = new HashMap<Integer,String>();	/* id numerico chiave
+																				 * un numero per ogni token
+																				 */
 
 	public SVMParser(TokenStream input) {
 		super(input);
@@ -155,8 +163,13 @@ public class SVMParser extends Parser {
 			}
 			setState(10);
 			match(EOF);
-			for(Integer j: labelRef.keySet())
-										code[j]=labelDef.get(labelRef.get(j));/*questo � quello che vado a mettere come indirizzo nel buco*/
+			for(Integer j: labelRef.keySet()) /*
+			 * recuperare il token che a chiave j
+			 */
+										code[j]=labelDef.get(labelRef.get(j));/*
+										 * dato l'id numerico recupero il simbolo ad esso asssociato e lo salvo nell'array contennte tutto il programma 
+										 * questo � quello che vado a 
+																			* mettere come indirizzo nel buco*/
 										
 			}
 		}

@@ -24,7 +24,6 @@ import static compiler.lib.FOOLlib.*;
  * Booltype node : rappresentano il tipo dei paramentri delle produzioni/variabili/tipi
  * 
  * discorso analogo vale per int
- * @author giuliabrugnatti
  *
  */
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
@@ -34,14 +33,12 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	
     ASTGenerationSTVisitor() {}    
     ASTGenerationSTVisitor(boolean debug) { print=debug; }
-        /*
-         * lui prende in generale 
-         */
+
     private void printVarAndProdName(ParserRuleContext ctx) {
         String prefix="";        
         					
     	Class<?> ctxClass=ctx.getClass(), parentClass=ctxClass.getSuperclass(); //getCLass prende la classe con la reflection e getsuperclass prende quella sopra
-        if (!parentClass.equals(ParserRuleContext.class)) // parentClass is the var context (and not ctxClass itself) ; se è parse rule context è già una var se no vuol dire che lo devo ottenre dal genitore        												
+        if (!parentClass.equals(ParserRuleContext.class)) 						// parentClass is the var context (and not ctxClass itself) ; se è parse rule context è già una var se no vuol dire che lo devo ottenre dal genitore        												
         	prefix=lowerizeFirstChar(extractCtxName(parentClass.getName()))+": production #"; //è il caso in cui il var context lo ottengo dalla superclasse; prima estraendo il nome della var
         																						//utilizza delle piccole funzioni di libreria per tagliare e formattare il nome come ci serve con delle funzioni in FFOLli
     	System.out.println(indent+prefix+lowerizeFirstChar(extractCtxName(ctxClass.getName())));    //prefisso nome var : prodction # e nome vero della var

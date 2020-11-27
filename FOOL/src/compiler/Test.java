@@ -10,8 +10,8 @@ public class Test {
    			
         String fileName = "prova.fool";
 
-        CharStream chars = CharStreams.fromFileName(fileName);
-        FOOLLexer lexer = new FOOLLexer(chars);
+        CharStream chars = CharStreams.fromFileName(fileName);	//prendo lo stream di caratteri dal di input
+        FOOLLexer lexer = new FOOLLexer(chars);					//creo+ inizializzo il lexer con lo stream di char
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FOOLParser parser = new FOOLParser(tokens);
         
@@ -22,7 +22,7 @@ public class Test {
 
         System.out.println("Generating AST.");
         
-        ASTGenerationSTVisitor visitor = new ASTGenerationSTVisitor(true);
+        ASTGenerationSTVisitor visitor = new ASTGenerationSTVisitor(true);//qui vengono generate le entry
         Node ast = visitor.visit(st); //generazione AST 
 
     	System.out.println("Visualizing AST...");

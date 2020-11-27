@@ -10,6 +10,7 @@ public class BaseEASTVisitor<S> extends BaseASTVisitor<S>  {
     protected void printSTentry(String s) {
     	System.out.println(indent+"STentry: "+s);
 	}
+    
 	//questo metodo è la ragione dell'esistenza di questa classe 
 	public S visitSTentry(STentry s) {throw new UnimplException();}
 }

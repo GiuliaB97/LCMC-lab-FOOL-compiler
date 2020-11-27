@@ -76,7 +76,7 @@ public class AST {
 	}
 
 	public static class ProgLetInNode extends Node {
-		List<Node> declist;
+		List<Node> declist;											//Lista delle dichairazioni contenute 
 		Node exp;
 		ProgLetInNode(List<Node> d, Node e) {declist = d; exp = e;}
 

@@ -7,10 +7,12 @@ import compiler.FOOLParser.*;
 import compiler.lib.*;
 import compiler_lab7.AST.*;
 
-//'ASTGeneration': perchè sto facendo questa cosa: per generare l'AST 'STVisitor': suffisso cosa sto visitando le classi context
+/*'ASTGeneration': perchè sto facendo questa cosa: per generare l'AST 'STVisitor':
+suffisso cosa sto visitando le classi context*/
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
 	String indent;
+	//Questa è la fase in cui creo i Node
 	
     @Override
 	public Node visit(ParseTree t) {
@@ -30,7 +32,12 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitHighPriOp(HighPriOpContext c) {
 		System.out.println(indent+"exp: prod with TIMES");
-		return new TimesNode( visit(c.exp(0)), visit(c.exp(1)) ); //quando stampiamo stiamo dicendo inq uel punto dell'albero cosa c'è; in quel punto dell'albero c'è exp che ha come figli quelli della produzione times exp TIMES exp (cioè quello che vado a stampare con le visite
+		return new TimesNode( visit(c.exp(0)), visit(c.exp(1)) ); /*quando stampiamo stiamo dicendo in quel 
+																	*punto dell'albero cosa c'è; in quel punto
+																	* dell'albero c'è exp che ha come figli quelli 
+																	* della produzione times exp TIMES exp (cioè 
+																	* quello che vado a stampare con le visite
+																	*/
 	}
 
 	@Override
@@ -75,7 +82,10 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
 	@Override
 	public Node visitIf(IfContext c) {
-		System.out.println(indent+"exp: prod with IF THEN CLPAR CRPAR ELSE CLPAR CRPAR"); //questo nodo exp ha come figli exp0, exp1, exp2,  e  IF THEN CLPAR CRPAR ELSE CLPAR CRPAR : tutti i figli che 
+		System.out.println(indent+"exp: prod with IF THEN CLPAR CRPAR ELSE CLPAR CRPAR"); /*questo nodo exp ha come figli 
+																							*exp0, exp1, exp2,  e  
+																							IF THEN CLPAR CRPAR ELSE CLPAR CRPAR: 
+																							tutti i figli che...*/
 		return new IfNode( visit(c.exp(0)), visit(c.exp(1)), visit(c.exp(2)) ); 
 	}
 
