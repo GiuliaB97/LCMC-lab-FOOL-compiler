@@ -128,9 +128,18 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	public Node visitFundec(FundecContext c) {
 		if (print) printVarAndProdName(c);
 		List<Node> declist =new ArrayList<>();
+		List<ParNode> parlist=new ArrayList<>();
+		for(int i=0; i<parlist.size();i++) { 
+			parlist.get(i).setId(c.ID(i).getText());
+			parlist.get(i).setType(c.type(i));
+			parlist.get(i).setLine(c.ID(i).getSymbol().getLine());
+		}
+		
+		
 		for (DecContext dec : c.dec()) visit(dec);
 		visit(c.type(0)); 
-		Node n= new FunNode(c.ID(0).getText(), visit(c.type(0)),declist, visit(c.exp()));//occhio che qui ho più di un ID quindi devo specificare in quale nodo trovo il nome della funzione   
+		
+		Node n= new FunNode(c.ID(0).getText(), visit(c.type(0)),null, declist, visit(c.exp()));//occhio che qui ho più di un ID quindi devo specificare in quale nodo trovo il nome della funzione   
 																							//in generale quando chiamo la visita su un tipo finisco in inttype o in bool tuyp che crearanno un bool type node o un intype node
 		n.setLine(c.FUN().getSymbol().getLine());//questo mi recupera il numero di linea
 	
@@ -205,9 +214,9 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	 */
 	@Override
 	public Node visitCall(CallContext c) {	
-												
+		List<Node> arglist=new ArrayList<>();
 		if (print) printVarAndProdName(c);
-		Node n= new CallNode(c.ID().getText());
+		Node n= new CallNode(c.ID().getText(), arglist);
 		n.setLine(c.ID().getSymbol().getLine());//questo mi ricorda il numero di linea
 		
 		return n;

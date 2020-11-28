@@ -104,7 +104,7 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void> {
 	public Void visitNode(FunNode n) {
 		printNode(n,n.id);
 		visit(n.retType);
-		// for (ParNode par : n.parlist) visit(par); 
+		for (ParNode par : n.parlist) visit(par); 
 														/*di che tipo statico è par(?) par node così chiamarebbe direttamente parnode 
 														 * senza chiamare node che chiama accept-> problema per quello che riguarda l'indentazione
 														 * Soluzioni: fare una var node, far un cast (in particolare un upcast)
@@ -126,7 +126,7 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void> {
 	@Override
 	public Void visitNode(CallNode n) {
 		printNode(n,n.id);							
-		// for (Node arg : n.arglist) visit(arg);
+		for (Node arg : n.arglist) visit(arg);
 		if(n.entry!=null) visitSTentry(n.entry);
 		return null;
 	}
@@ -140,6 +140,17 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void> {
 	@Override
 	public Void visitSTentry(STentry entry) {
 		printSTentry("nestlev "+entry.nl);
+		return null;
+	}
+	
+	
+	@Override
+	public Void visitNode(ParNode n) {
+		printNode(n,n.id);
+		visit((Visitable) n.type);			/*cast obbligato a causa della porcata
+											*fatta nella classe ParNode per cui type
+											*non è di tipo Ndoe ma di tipo parContext
+											*/
 		return null;
 	}
 }

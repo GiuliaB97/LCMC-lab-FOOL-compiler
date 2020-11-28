@@ -1,6 +1,8 @@
 package compiler.lib;
 
 import compiler.AST.*;
+import compiler.ParNode;
+
 import static compiler.lib.FOOLlib.*;
 
 public class BaseASTVisitor<S> {
@@ -55,4 +57,8 @@ public class BaseASTVisitor<S> {
 	public S visitNode(FunNode n) {throw new UnimplException();}
 	public S visitNode(IdNode n) {throw new UnimplException();}
 	public S visitNode(CallNode n) {throw new UnimplException();}
+	
+	
+	//added by me
+	public Void visitNode(ParNode n) {throw new UnimplException();}
 }
