@@ -1,16 +1,22 @@
 package compiler.lib;
 
 import compiler.*;
-
-public class BaseEASTVisitor<S> extends BaseASTVisitor<S>  {
+import compiler.exc.UnimplException;
+/*
+ * Anche lui riceve la classe su cui utilizzo le eccezioni E
+ * e dichaira di gettare E
+ */
+public class BaseEASTVisitor<S,E extends Exception> extends BaseASTVisitor<S,E>  {
 	
-	protected BaseEASTVisitor() {}
-    protected BaseEASTVisitor(boolean p) { super(p); }
+	protected BaseEASTVisitor() {}//Se uso questo non lo abilito
+	protected BaseEASTVisitor(boolean ie) { super(ie); } 
+    protected BaseEASTVisitor(boolean ie, boolean p) { super(ie, p); }
     
     protected void printSTentry(String s) {
     	System.out.println(indent+"STentry: "+s);
 	}
-    
-	//questo metodo è la ragione dell'esistenza di questa classe 
-	public S visitSTentry(STentry s) {throw new UnimplException();}
+	
+	public S visitSTentry(STentry s) throws E {throw new UnimplException();}
 }
+
+// 

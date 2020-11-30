@@ -1,15 +1,13 @@
 let
-  var y:int = 5+2;
-  fun g:bool (b:bool)
+  var x:int = 5+3;
+  fun f:bool (n:int, m:int)
     let 
-      fun f:bool (n:int, m:int)
-        let 
-          var x:int = m;
-        in g(3==5);   
-    in if b then { f(2,3) } else { false };
+      var x:int = true;
+    in x==(n==m);   
 in  
   print ( 
-    if g(true) 
-      then { y }
-      else { 10 }
-  ); 
+   if x==8 
+     then { false }
+     else { 10 }
+  ) 
+;
