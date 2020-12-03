@@ -1,10 +1,13 @@
-package compiler_8;
+package compiler_lab9;
 
 import java.util.*;
 import compiler.lib.*;
 
 public class AST {
-
+/*
+ * ho dovuto cambiare il metodo richiamato dal visitor per riflettere il 
+ * cambiamento effettuato sul visitor per gestire correttamente l'overloading
+ */
 	public static class ProgNode extends Node {
 		Node exp;
 		ProgNode(Node e) {exp = e;}
@@ -74,7 +77,6 @@ public class AST {
 		public <S> S accept(BaseASTVisitor<S> visitor) { return visitor.visitNode(this); }
 	}
 	
-/////
 
 	public static class ProgLetInNode extends Node {
 		List<Node> declist;

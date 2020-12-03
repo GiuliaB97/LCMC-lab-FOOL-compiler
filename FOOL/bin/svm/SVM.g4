@@ -53,14 +53,38 @@ assembly: instruction* EOF {for(Integer j: labelRef.keySet()) /*
 							}; 
 
 instruction:
+/*
+ * la push mette sullo stack l'indirizzo della label
+ * il token si chaima branch ma il lessema si chiama b
+ * 
+ * branch label: deve metter l'indirizzo effettivo: devon andare a capire quella lael a che indirizzo è 
+ * 
+ * COme gestire le label? se abbiamo lla branch a pippo e pippo due punti non è ancora stato raggiunto che facciio?
+ * lascio il buco che riempiremo una volta trovato il pippo :
+ * devo salavarmi da qualche parte che lì c'è un buco
+ * 
+ * tengo una lista di buchi 
+ * 
+ * labelref: lista di riferimneti irrisolti: li si ricorda che c'è un buco: mappa interi: posizione del buco in stringhe ossia la label (mapping indirizzo -etichetta)
+ * 
+ * 
+ * labeldef: viene popolato qunado incontro label : associa stringhe a indirizzi: una volta incontrata la label si salva a che indirizzo è ; perchè mi serve anche questo perchè più avanti ci pèpotrebbe essere una nuova branch a pippo 
+ * aspetto di arrivare alla fine prima di riempire (utilizzerò un ciclo for per riempire tutti i buchi alla fine  
+ *  1 ora e 24
+ * 
+ */
         PUSH n=INTEGER{	code[i++] = PUSH;	
-        				code[i++] =	Integer.parseInt($n.text);}	//recupera il valore 
-        											/*push INTEGER on the stack;
-        											n mi da la possibilità di accedere al lessema che ha matchato con integer
-        				  							push è un valore numerico che possiamo mettere dentro un array di interi: 
-        											code parte  da 0 va avanti; code è l'array che conterrà la nostra roba
-        											NB ho bisogno di due caselle perchè mi serve l'argomento*/
-	  | PUSH l=LABEL{code[i++] = PUSH;			
+        				code[i++] =	Integer.parseInt($n.text);}	/* Prendo il lessema che ha matchato con integer ossia il numero; 
+    				 											* il lexer passa al parser non solo il nome del token ma come 
+    				 											* parametro anche il lessama
+    				 											* viene dato il numero che ha matchato in base alla regex degli integer
+    				 											*/
+			        											/*push INTEGER on the stack;
+			        											n mi da la possibilità di accedere al lessema che ha matchato con integer
+			        				  							push è un valore numerico che possiamo mettere dentro un array di interi: 
+			        											code parte  da 0 va avanti; code è l'array che conterrà la nostra roba
+			        											NB ho bisogno di due caselle perchè mi serve l'argomento*/
+				  | PUSH l=LABEL{code[i++] = PUSH;			
 		  			labelRef.put(i++, $l.text);}	/*push the location address pointed by 
 													LABEL on the stack;
 		  				 							* mettere sullo stack l'indirizzo a cui

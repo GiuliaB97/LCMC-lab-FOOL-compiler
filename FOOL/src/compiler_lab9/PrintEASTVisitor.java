@@ -1,11 +1,18 @@
-package compiler_8;
+package compiler_lab9;
 
 import compiler.lib.*;
-import compiler_8.AST.*;
+import compiler_lab9.AST.*;
 
 
 /*
- * RIGUARDA E CHIEDI AIUTO IL DISCORSO NON E' CHIARO!!!!!!!!!!!!!
+ * i metodi che implentano la visita sono stati rinominati nel lab 9 per gestire correttamente 
+ * l'overloading di tipo statico: se si fossero chiamati tutti "visit" come in passato al momento 
+ * della chiamata a visit non sarebbero passati sul visit() che chiama l'accept e fa l'indentazione
+ *  ma su quello relativo alla loro classe perchè:
+ *  visit(par) avrebbe visto che staticamente il tipo effettivo era par.
+ * In alternativa avrei potuto fare un upcast osceno a Node per fargli chiamare il metodo giusto---> anche no
+ * Questo cambiamento si riflette anche sull'AST
+ * 
  */
 
 //legame con ANTLR che rifugge dall'overloading : lui ha una gerarhia noi abbiamo dei nodi che stanno per i fatti loro.
@@ -104,7 +111,7 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void> {
 	public Void visitNode(FunNode n) {
 		printNode(n,n.id);
 		visit(n.retType);
-		for (compiler_8.AST.ParNode par : n.parlist) visit(par); 
+		for (compiler_lab9.AST.ParNode par : n.parlist) visit(par); 
 														/*di che tipo statico è par(?) par node così chiamarebbe direttamente parnode 
 														 * senza chiamare node che chiama accept-> problema per quello che riguarda l'indentazione
 														 * Soluzioni: fare una var node, far un cast (in particolare un upcast)

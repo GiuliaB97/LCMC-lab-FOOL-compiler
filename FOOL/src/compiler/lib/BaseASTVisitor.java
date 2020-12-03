@@ -19,7 +19,24 @@ public class BaseASTVisitor<S,E extends Exception> {
 	protected BaseASTVisitor() {}
 	protected BaseASTVisitor(boolean ie) {incomplExc = ie;  }
 	protected BaseASTVisitor(boolean ie, boolean p) { incomplExc = ie; print = p;  }
-
+	/**
+	 * 2020-11-16
+	 * 
+	 * Doto ogni classe node[AST.java] di un metodo accept (){ che chiami visit(this)}
+	 * questo serve perchè così quando sono nel visitor faccio diventare la n presa come parametro 
+	 * nel metodo protected void printNode(Node n) {} la faccio diventare soggetto.
+	 * chiamando il metodo accept sulla classe effettiva così java può fare l'rtti
+	 * Quando arrivo alla classe visitor il metodo visit che richiamo è visit(Node n)
+	 * qui quando arriva ad eseguire il metodo accept fa l'rtti sul soggetto 
+	 * e quindi verrà chiamata l'accept sulla classe specifica che quindi chiamerà visit(this)
+	 * facendo così; chiama visit sull'istanza della classe che su cui è chiamata accept quindi da 
+	 * lì fa la visita specifica sull'oggetto che mi interessa
+	 * 
+	 * tuttavia come faccio a gestire il riferimento al Visitor lo passo al node con this
+	 * (così ogni classe specifica riceve l'oggetto esatvisitor e su questo chiama visit)
+	 * ---> questa cosa nell'ultima implementazione è stata messa nell'interfaccia Visitable
+	 * 
+	 */
 	protected void printNode(Node n) {
 		System.out.println(indent+extractNodeName(n.getClass().getName()));
 	}

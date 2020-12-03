@@ -1,4 +1,4 @@
-package compiler_8;
+package compiler_lab9;
 
 import compiler.lib.BaseASTVisitor;
 import compiler.lib.BaseEASTVisitor;

@@ -9,6 +9,7 @@ import compiler_lab7.AST.*;
 
 /*'ASTGeneration': perchè sto facendo questa cosa: per generare l'AST 'STVisitor':
 suffisso cosa sto visitando le classi context*/
+
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
 	String indent;

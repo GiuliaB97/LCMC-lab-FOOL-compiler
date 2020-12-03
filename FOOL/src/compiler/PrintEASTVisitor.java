@@ -5,13 +5,13 @@ import compiler.lib.*;
 import compiler.exc.*;
 /*
  * Aim:
- * 
+ 
  * void exceptio eccezione unchecked che non viene mai gettata; 
  * serve come parametro da passare al base visitor
  * il fatto che sia unchecked mi permette di chaiamre gli stessi metodi fdi visita senza  
  * try-check o throws
  *  posso sempre overridare un metodo che dichiara throws senza throws
-?????????????
+		?????????????
  */
 public class PrintEASTVisitor extends BaseEASTVisitor<Void,VoidException> {
 

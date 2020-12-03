@@ -1,11 +1,11 @@
-package compiler_8;
+package compiler_lab9;
 
 import java.util.*;
 import java.util.Map;
 
 import compiler.lib.*;
 import compiler.lib.Node;
-import compiler_8.AST.*;
+import compiler_lab9.AST.*;
 
 public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
 /*
@@ -25,13 +25,22 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
  * Questa visita torna void come la print perchè il suo obiettivo è arrichhire 
  * l'albero quando incontra un uso che fa match con una dichiarazione 
  */
-	int stErrors=0;
-	private List<Map<String, STentry>> symTable = new ArrayList<>();
+	int stErrors=0;	//campo che ci serve per gli errori che incontriamo
+	private List<Map<String, STentry>> symTable = new ArrayList<>();	/*
+																		*symbol table: lista di mappe: 
+																		*ogni mappa mappa nomi di identificatori a stentry: 
+																		*che possono contenre varie cose 
+																		*per il momento iniziamo col nesting level
+																		*/
 	private int nestingLevel=0;
 	/*
 	 * livello ambiente con dichiarazioni piu' esterno è 0 
 	 * (prima posizione ArrayList) invece che 1 (slides)
 	 * il "fronte" della lista di tabelle è symTable.get(nestingLevel)
+	 */
+	/*
+	 * la visita torna void perchè fa solo visite se riesce ad associare id 
+	 * ad uso allora attacca la pallina all'albero
 	 */
 
 	SymbolTableASTVisitor() {}
@@ -189,7 +198,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
 		Map<String, STentry> hmn = new HashMap<>();
 		symTable.add(hmn);
 		//esercizio
-		for (compiler_8.AST.ParNode par : n.parlist)
+		for (compiler_lab9.AST.ParNode par : n.parlist)
 			if (hmn.put(par.id, new STentry(nestingLevel)) != null) {
 				System.out.println("Par id " + par.id + " at line "+ n.getLine() +" already declared");
 				stErrors++;

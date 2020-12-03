@@ -17,9 +17,10 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	
     ASTGenerationSTVisitor() {}    
     ASTGenerationSTVisitor(boolean debug) { print=debug; }
-        
+
     private void printVarAndProdName(ParserRuleContext ctx) {
-        String prefix="";        
+        String prefix="";    
+        
     	Class<?> ctxClass=ctx.getClass(), parentClass=ctxClass.getSuperclass();
         if (!parentClass.equals(ParserRuleContext.class)) // parentClass is the var context (and not ctxClass itself)
         	prefix=lowerizeFirstChar(extractCtxName(parentClass.getName()))+": production #";

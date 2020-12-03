@@ -1,4 +1,4 @@
-package compiler_8;
+package compiler_lab9;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;

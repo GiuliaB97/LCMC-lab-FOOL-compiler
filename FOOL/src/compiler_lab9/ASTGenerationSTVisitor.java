@@ -1,4 +1,4 @@
-package compiler_8;
+package compiler_lab9;
 
 import java.util.*;
 
@@ -8,11 +8,18 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import compiler.FOOLBaseVisitor;
 import compiler.FOOLParser.*;
 import compiler.lib.*;
-import compiler_8.AST.*;
+import compiler_lab9.AST.*;
 
 import static compiler.lib.FOOLlib.*;
 
 /*
+ * 
+ * ASTGenerationSTVisitor:
+ * -visitor che a partire dal ST genera l'AST
+ * --perchè stampare prima di eseguire la visita?
+ * ---per dire cosa c'è in quel punto dell'albero
+ * 
+ *  
  * I metodi di visita sono presentati nello stesso ordine della grammatica; per gli elementi sintattici che già c'erano non è cambiato nulla;
  * l'unica differenza è che nella stampa è stata messa una cosa automatica: utilizzando la reflection: idea metto 'var : prod applicata'
  * andando ad indagare tramite reflection sul tipo di C: quando va ad analizzarre il simbolo va nella grammatica .g4 e prende il nome che segue # ossia il nome della classe
@@ -21,13 +28,22 @@ import static compiler.lib.FOOLlib.*;
  * 
  *  Quando ho un unica produzione faccio il visit solo sul progcontext perchè quello è il nodo dell'albero e la produzione appplicata è l'unica che c'è
  */
-/**
- * Bool node: valore node (è una foglia ) 
- * Booltype node : rappresentano il tipo dei paramentri delle produzioni/variabili/tipi
- * 
- * discorso analogo vale per int
- *
+
+/*
+ * stampa automatica utilizzando la reflection:
+ * idea: mettere "var : prod applicata" --> viene fatto automaticamente tramite reflection
+ * 		passando al metodo di stampa un istanza della classe dalla quale lui può recuperare il tipo
+ * 		exp è più complesso: devo guardare la classe da cui eredita c: la classe TimesContext eredita dalla classe della var ossia expContext
+ * 		ANTLR vede le produzioni di una variabile come classi che ereditano dal genitore;
+ * 		se parto ed ho c il mio parametro: con la sua classe ottengo (per esempio) Times poi guardo la classe da cui eredita e da li ottengo la exp per mettere i :
+ *		quando ho un unica produzione visito direttamente la variabile (es produzione)
  */
+
+/* In questa classe che estende il visitor di default è possibile notare come:
+ * ANTLR rifugga dall'overloading dando ad ogni metodo visit un nome specifico 
+ * 
+ */
+
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
 	String indent;
@@ -35,6 +51,14 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	
     ASTGenerationSTVisitor() {}    
     ASTGenerationSTVisitor(boolean debug) { print=debug; }
+    /*
+     * con la reflection prendo la classe di ctx (quello che prima era c
+     * e prendo anche la sua superclasse poi dico: 
+     * - se è parserulecontext c già il nome della var
+     * - allora c è il nome della prod e il nome lo ottengo dalla super classe
+     * 	 prima devo estrarre il nome perchè queste classi quando faccio getName danno il nome completo della classe con pkg ecc.
+     * 	 con le funzioni di libreria mi libero della roba inutile
+     */ 
 
     private void printVarAndProdName(ParserRuleContext ctx) {
         String prefix="";        
@@ -62,14 +86,16 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitProg(ProgContext c) {
 		if (print) printVarAndProdName(c);
+		//quando visito il prgo restituisco il progbody che poi andrà nei due casi
 		return visit(c.progbody());
 	}
 	
 	/*
-	 * Caso del LET IN
+	 * Caso del LET IN: primo figlio di progin
 	 * sto costruendo l'ast quello che devo fare è:
-	 * creare un nodo apposta(al posto del progviisto)
-	 * questo nodo si chiamerà ProgLetInNode(?9
+	 * creare un nodo apposta ProgLetInNode che avrà 
+	 * un array di figli: le sue dichiarazioni e il figlio 
+	 * con il corpo del programma
 	 * 
 	 */
 
@@ -78,19 +104,21 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		if (print) printVarAndProdName(c);
 		List<Node> declist =new ArrayList<>();
 		for (DecContext dec : c.dec())  declist.add(visit(dec));		/*ciclo su tutti i figli dec (le dichairazioni delle var) c.dec: 
-																			restituisce una lista di tutti i figli dell'albero sintattico di dec; io li scorro tutti chiamandoci una visita;
-																			 che ci faccio con sti node li colleziono e li menttto in un campo declist
-																			*/
+																		*	restituisce una lista di tutti i figli dell'albero sintattico di dec; 
+																		*	io li scorro tutti chiamandoci una visita;
+																		*	 li colleziono e li menttto in un campo declist
+																		*/
 		visit(c.exp());
 		return new ProgLetInNode(declist, visit(c.exp()));
 	}
 
 	/*
-	 * VIsita a quello senza dichiarazioni
+	 * Visita a quello senza dichiarazioni
 	 */
 	@Override
 	public Node visitNoDecProg(NoDecProgContext c) {
 		if (print) printVarAndProdName(c);
+		//creo un oggetto prog e gli do come figlio la visita di exp
 		return new ProgNode(visit(c.exp()));
 	}
 
@@ -143,17 +171,23 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		n.setLine(c.FUN().getSymbol().getLine());
         return n;
 	}
-
+	/**
+	 * Bool node: valore node (è una foglia ) 
+	 * Booltype node : rappresentano il tipo dei paramentri delle produzioni/variabili/tipi
+	 * 
+	 * discorso analogo vale per int
+	 *
+	 */
 	@Override
 	public Node visitIntType(IntTypeContext c) {
 		if (print) printVarAndProdName(c);
-		return new IntTypeNode();					//ricontrolla
+		return new IntTypeNode();					
 	}
 
 	@Override
 	public Node visitBoolType(BoolTypeContext c) {
 		if (print) printVarAndProdName(c);
-		return new BoolTypeNode();					//ricontrilla
+		return new BoolTypeNode();					
 	}
 
 	@Override

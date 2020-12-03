@@ -163,7 +163,16 @@ public class TypeCheckASTVisitor extends BaseASTVisitor<TypeNode,TypeException> 
 	@Override
 	public TypeNode visitNode(CallNode n) throws TypeException {
 		if (print) printNode(n,n.id);
-		for (Node arg : n.arglist) visit(arg);
+		
+		if( n.entry.type instanceof ArrowTypeNode)	/*gli errori li facciamo al contrario perchè voglio sapere quando lanciare l'eccezione e si blocca tutto*/
+			throw new TypeException("Invocation of a non-function"+n.id, n.getLine());
+		for (Node arg : n.arglist) {
+			if(!(isSubtype(visit(arg),  n.entry.type))) {
+				throw new TypeException("  Wrong type for"+n.arglist.indexOf(arg)+
+						"-th parameter in the invocation of"+n.id, n.getLine());
+			}
+
+		}
 		return null;
 	}
 /*
