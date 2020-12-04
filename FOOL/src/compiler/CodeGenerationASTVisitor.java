@@ -11,7 +11,7 @@ import static compiler.lib.FOOLlib.*;
  * */
 /*
  * COSE NON CHIARE
- * EQUAL NODE, IF NODE
+ * EQUAL NODE, IF NODE, ID NODE: doppio lw (access kubj
  */
 public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidException> {
 
@@ -34,9 +34,12 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 								 */
 		for (Node dec : n.declist) declCode = nlJoin(declCode, visit(dec));//aggiungo a declcode il risultaoto della funzione
 		return nlJoin(
+				"push 0",//devo impostare un return address fittizio a 0 o quello che mi pare nessuno lo legegerà ma devo uniformare l'ambiente globale a quello delle funzioni
 				declCode,// generate code for declarations (allocation)
+						//lei mi deve mettere nello stack il suo indirizzo
 				visit(n.exp),
-				"halt");
+				"halt", 
+				getCode());
 	}
 /*
  * programma con corpo senza dichiarazioni di variabili ecc
@@ -52,15 +55,22 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 				"halt"
 		);
 	}
-
+/*
+ * allocare la dichairazione di una funzione vuol dire metterci il suo indirizzo 
+ */
 	@Override
 	public String visitNode(FunNode n) {
 		if (print) printNode(n,n.id);
+		String funl = freshFunLabel();	//creazione fresh label
+		
 		for (ParNode par : n.parlist) visit(par);
 		for (Node dec : n.declist) visit(dec);
 		visit(n.exp);
-		return null;
-		//return nlJoin();
+		visit(n.exp);
+		putCode(nlJoin(funl+ ":" /*codice corpo funzione*/)); /*posto dove colleziono tutti i codici delle funzioni e
+		 														quando ho finito li metto tutti dopo
+		 														qui faccio push di un'etichetta a cui poi dovrò andare a mettere il corpo della funzione*/
+		return "push" + funl;
 	}
 /*
  * var node deve allocare sullo stack il valore calcolato per la variabile
@@ -171,24 +181,48 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 
 	@Override
 	public String visitNode(CallNode n) {
+		String argCode=null;
 		if (print) printNode(n,n.id);
 		for (Node arg : n.arglist) visit(arg);
-		return null;
-		//return nlJoin();
+		for (int i = n.arglist.size() - 1; i >= 0; i--) argCode = nlJoin(argCode, visit(n.arglist.get(i)));//Devo visitarle in ordine inverso perchè?che cosa sto salvando?
+		String getAR = null;
+		for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");//getAr codice che mi serve per raggiunger l'ar della dichiarazione; iterando sulla differenza di nesting level ad ogni iterazione aggiungo una lw alla stringa
+
+		return nlJoin(
+				"lfp",//prima cosa da fare caricare sullo stack il control link; il frame dove sono adesso è lfp: ossia il frame del chiamante (sono io)
+						// load Control Link (pointer to frame of function "id" caller)
+				argCode,//mette il valore degli argomenti sullo stack
+							// generate code for argument expressions in reversed order
+						//il valore dell'access link è il puntatore al frame dove è dichairata la funzione ; lo stesso frame dove è dichairata la funzione mi serve anche per l'indirizzo della funzione(che troverò tramite l'offset)
+				"lfp",
+				getAR,
+				"stm",  //poppa un valore dallo stack e lo mette nel?? ltm la prima volta setta l'accesslink, l'altro lo uso per recueprare l'indirizzo della funzione ed effettjujare il salto
+						// load Access Link (pointer to frame of function "id" declaration)
+				"ltm",	// duplicate top of stack 
+				"ltm",	// set $tm to popped value (with the aim of duplicating top of stack)
+				"push " n.entry.offset, "add",// jump to popped address (saving address of subsequent instruction in $ra)
+				"lw",
+				/*qualcosa...*/
+				);
 	}
 
 	@Override
 	public String visitNode(IdNode n) {
-		if (print) printNode(n,n.id);
-		
+		if (print) printNode(n,n.id);	
+		String getAR = null;
+		for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");//getAr codice che mi serve per raggiunger l'ar della dichiarazione; iterando sulla differenza di nesting level ad ogni iterazione aggiungo una lw alla stringa
+
+	
 		return nlJoin(
-				"lfp",					//prendo il valore fp e lo metto sulla cima dello stack
-										//load address of current frame (containing "id" declaration)
+				"lfp",					//prendo il valore fp e lo metto sulla cima dello stack;
+											//retrieve address of frame containing "id" declaration
+				getAR, 					//per raggiungere il frame corretto devo risalire la catena degli access link dopo aver fatto lw punto al fram che mi richiude sintatticamente ed in particolare punto al suo access link
+											// by following the static chain (of Access Links)
 				"push" +n.entry.offset,	//metto l'offset sullo stack
-										//compute address of "id" declaration
-				"add",					//così metto sullo stack l'indiriizzo della var
+											//compute address of "id" declaration
+				"add",					//metto sullo stack l'indiriizzo della var
 				"lw" 					//prende l'indirizzo sulla cima dello stack, lo poppa e mette al suo posto i valore della variabile corrisposndente
-										//load value of "id" variable
+											//load value of "id" variable
 				);
 	}
 
@@ -205,23 +239,3 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 							//remeber: da rispettare l'invariante lo stack va lasciato come lo si è trovato con il regalo per la mamma in cima
 	}
 }
-
-//	String getAR = null;
-//	for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");
-
-// by following the static chain (of Access Links)
-
-
-//	String funl = freshFunLabel();
-
-
-//	for (int i = n.arglist.size() - 1; i >= 0; i--) argCode = nlJoin(argCode, visit(n.arglist.get(i)));
-
-// load Control Link (pointer to frame of function "id" caller)
-// generate code for argument expressions in reversed order
-
-// set $tm to popped value (with the aim of duplicating top of stack)
-// load Access Link (pointer to frame of function "id" declaration)
-// duplicate top of stack 
-
-// jump to popped address (saving address of subsequent instruction in $ra)

@@ -52,6 +52,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		Map<String, STentry> hm = symTable.get(nestingLevel);
 		List<TypeNode> parTypes = new ArrayList<>();  
 		for (ParNode par : n.parlist) parTypes.add(par.type); 
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		STentry entry = new STentry(nestingLevel, new ArrowTypeNode(parTypes,n.retType));
 		if (hm.put(n.id, entry) != null) {//inserimento di ID nella symtable
 			System.out.println("Fun id " + n.id + " at line "+ n.getLine() +" already declared");
@@ -138,8 +139,10 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		if (entry == null) {
 			System.out.println("Fun id " + n.id + " at line "+ n.getLine() + " not declared");
 			stErrors++;
-		} else 
+		} else {
 			n.entry = entry;
+			n.nl= this.nestingLevel;//memorizzo il nesting level dell'uso di questo identificatore
+		}
 		for (Node arg : n.arglist) visit(arg);
 		return null;
 	}
@@ -151,8 +154,11 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		if (entry == null) {
 			System.out.println("Var or Par id " + n.id + " at line "+ n.getLine() + " not declared");
 			stErrors++;
-		} else 
+		} else {//caso senza errori
 			n.entry = entry;//attacco la pallina alla foglia
+			n.nl= this.nestingLevel;//memorizzo il nesting level dell'uso di questo identificatore
+		}
+			
 		return null;
 	}
 
