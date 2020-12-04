@@ -8,11 +8,13 @@ import compiler.lib.*;
  * all'inizio nel linguaggio in cui non ho annidamenti ho solo il nesting level 0 
  */
 public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
-	private int decOffset=-1; // counter for offset of local declarations at current nesting level 
+	private int decOffset=-2; /* counter for offset of local declarations at current nesting level; 
+								*parte da -2 perchè nel mio ar layout ad offset -1 ho il return address
+								*/
 	private List<Map<String, STentry>> symTable = new ArrayList<>();
 	private int nestingLevel=0; // current nesting level
 	int stErrors=0;
-
+	
 	SymbolTableASTVisitor() {}
 	SymbolTableASTVisitor(boolean debug) {super(debug);} // enables print for debugging
 
@@ -24,9 +26,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		return entry;
 	}
 /*
- * progletin npde  è colui che infoca le visite sui va node
- * 
- * quindi dec 
+ * progletin node  è colui che infoca le visite sui va node
  */
 	@Override
 	public Void visitNode(ProgLetInNode n) {
@@ -53,24 +53,26 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		List<TypeNode> parTypes = new ArrayList<>();  
 		for (ParNode par : n.parlist) parTypes.add(par.type); 
 		STentry entry = new STentry(nestingLevel, new ArrowTypeNode(parTypes,n.retType));
-		//inserimento di ID nella symtable
-		if (hm.put(n.id, entry) != null) {
+		if (hm.put(n.id, entry) != null) {//inserimento di ID nella symtable
 			System.out.println("Fun id " + n.id + " at line "+ n.getLine() +" already declared");
 			stErrors++;
 		} 
-		//creare una nuova hashmap per la symTable
 		nestingLevel++;
-		Map<String, STentry> hmn = new HashMap<>();
+		Map<String, STentry> hmn = new HashMap<>();//creare una nuova hashmap per la symTable
 		symTable.add(hmn);
+		int prevNLDecOffset=decOffset; // stores counter for offset of declarations at previous nesting level 
+		this.decOffset=-2;
+		
+		int parOffSet=1;				//così realizziamo gli offset dei parametri
 		for (ParNode par : n.parlist)
-			if (hmn.put(par.id, new STentry(nestingLevel,par.type)) != null) {
+			if (hmn.put(par.id, new STentry(nestingLevel,par.type, parOffSet++)) != null) {
 				System.out.println("Par id " + par.id + " at line "+ n.getLine() +" already declared");
 				stErrors++;
 			}
 		for (Node dec : n.declist) visit(dec);
-		visit(n.exp);
-		//rimuovere la hashmap corrente poiche' esco dallo scope               
-		symTable.remove(nestingLevel--);
+		visit(n.exp);    
+		symTable.remove(nestingLevel--);//rimuovere la hashmap corrente poiche' esco dallo scope
+		decOffset=prevNLDecOffset; // restores counter for offset of declarations at previous nesting level
 		return null;
 	}
 	
