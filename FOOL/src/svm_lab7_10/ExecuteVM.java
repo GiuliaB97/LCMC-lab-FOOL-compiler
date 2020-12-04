@@ -1,4 +1,4 @@
-package svm7_10;
+package svm_lab7_10;
 
 import org.antlr.v4.runtime.*;
 

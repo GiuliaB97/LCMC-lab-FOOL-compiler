@@ -1,4 +1,4 @@
-package compiler10;
+package compiler_lab10;
 
 import java.util.*;
 
@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import compiler.FOOLBaseVisitor;
 import compiler.FOOLParser.*;
 import compiler.lib.*;
-import compiler10.AST.*;
+import compiler_lab10.AST.*;
 
 import static compiler.lib.FOOLlib.*;
 

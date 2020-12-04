@@ -1,4 +1,4 @@
-package compiler10;
+package compiler_lab10;
 
 import java.util.*;
 import compiler.lib.*;

@@ -1,10 +1,10 @@
-package compiler10;
+package compiler_lab10;
 
 import java.util.*;
 
 import compiler.exc.*;
 import compiler.lib.*;
-import compiler10.AST.*;
+import compiler_lab10.AST.*;
 
 public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 	
