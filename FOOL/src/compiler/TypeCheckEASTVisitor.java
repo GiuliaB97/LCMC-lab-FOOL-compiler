@@ -4,7 +4,13 @@ import compiler.AST.*;
 import compiler.exc.*;
 import compiler.lib.*;
 import static compiler.lib.FOOLlib.*;
-
+/*
+ * trasformato in eastvisitor perchè è stato aggiunto il metodo che visita le entry
+ * tutti sti controlli servono per gestire le possibili incompletezze sulle entry
+ * 
+ * il problema sono gli errori di sintassi: le produzioni vengono matchate solo parzialmente da antlr se sono incomplete;
+ * il mio obiettivo è non lanciare dei null pointer exception 
+ */
 //visitNode(n) fa il type checking di un Node n e ritorna:
 //- per una espressione, il suo tipo (oggetto BoolTypeNode o IntTypeNode)
 //- per una dichiarazione, "null"; controlla la correttezza interna della dichiarazione
@@ -126,7 +132,8 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
  * 
  * torno il tipo che nella dichiarazione di questa funzione è il tipo di ritorno (Campo ret della classe ArrowTypeNode
  * 
- * 
+ * PROBLEMA:
+ * la entry potrebbe essere null: in caso di errori; per questo visito la netry
  * 
  */
 	@Override
@@ -187,7 +194,22 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 		return null;
 	}
 
-//
+/*
+ * Aggiunta la visit della entry perchè ritorni il tipo di ritorno della entry
+ * risolve il problema perchè se al post del parametro entry passo null (caso di errore)
+ * BaseASTVisitor lancia una incomplete exception (dal metodo visit)
+ * 
+ * 
+ * problema anche il tipo che ritorno potrebbe essere incompleto:
+ * potrebbero mancargli tipi di parametri, o tipi di ritorno (errori sintattici sono quelli che causano il null dentro)
+ * come risolvo il problema?
+ * visito nach ei tipi::
+ * - se visito un tipo ritorno null (come per le dichairazini) perchè faccio un controllo innterno sulla consisrtenza della dicahiarazione e torno null
+ * 		se trova un errore lancia una complete exception
+ * visito il tipo poi lo utilizzo; per evitare di scrivere due cose (quetso check va fatto tutte le volte che visitip un tipo che sta in un campo di un nodoo)
+ * per evitare di visita e ritornare il tipo è stata aggiunta un metodo che checka il tipo attraverso la visita:
+ * le fa il check e poi ritorna il tipo
+ */
 
 	@Override
 	public TypeNode visitSTentry(STentry entry) throws TypeException {

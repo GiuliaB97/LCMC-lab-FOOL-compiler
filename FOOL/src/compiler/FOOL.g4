@@ -18,7 +18,9 @@ dec : VAR ID COLON type ASS exp SEMIC  #vardec
     | FUN ID COLON type LPAR (ID COLON type (COMMA ID COLON type)* )? RPAR 
         	(LET dec+ IN)? exp SEMIC   #fundec
     ;
-          
+     /*
+      *ha una ricorsione a sinistra che viene trasformata in ricorsione a dx??
+      */     
 exp     : exp TIMES exp #times
         | exp PLUS  exp #plus
         | exp EQ  exp   #eq 
