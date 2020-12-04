@@ -5,17 +5,18 @@ import compiler.exc.*;
 import compiler.lib.*;
 import static compiler.lib.FOOLlib.*;
 /*
- * trasformato in eastvisitor perchè è stato aggiunto il metodo che visita le entry
+ * CAMBIAMENTI rispetto al lab10
+ * trasformato in Eastvisitor perchè è stato aggiunto il metodo che visita le entry
+ * 
+ * AIM
  * tutti sti controlli servono per gestire le possibili incompletezze sulle entry
  * 
- * il problema sono gli errori di sintassi: le produzioni vengono matchate solo parzialmente da antlr se sono incomplete;
- * il mio obiettivo è non lanciare dei null pointer exception 
+ * PROBLEMA
+ * Errori di sintassi: le produzioni vengono matchate solo parzialmente da antlr se sono incomplete;
+ * ->il mio obiettivo è non lanciare dei null pointer exception 
+ * 
  */
-//visitNode(n) fa il type checking di un Node n e ritorna:
-//- per una espressione, il suo tipo (oggetto BoolTypeNode o IntTypeNode)
-//- per una dichiarazione, "null"; controlla la correttezza interna della dichiarazione
-//(- per un tipo: "null"; controlla che il tipo non sia incompleto) 
-//
+
 //visitSTentry(s) ritorna, per una STentry s, il tipo contenuto al suo interno
 public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException> {
 
@@ -195,26 +196,34 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 	}
 
 /*
+ * WHY
+ * -Questo metodo è la ragione per cui la classe è diventata EAST
+ * 
+ * OVERVIEW
  * Aggiunta la visit della entry perchè ritorni il tipo di ritorno della entry
  * risolve il problema perchè se al post del parametro entry passo null (caso di errore)
  * BaseASTVisitor lancia una incomplete exception (dal metodo visit)
  * 
+ * PROBLEMA
+ *  anche il tipo che ritorno potrebbe essere incompleto:
+ * potrebbero mancargli tipi di parametri, o tipi di ritorno 
+ * (errori sintattici sono quelli che causano il null dentro)
  * 
- * problema anche il tipo che ritorno potrebbe essere incompleto:
- * potrebbero mancargli tipi di parametri, o tipi di ritorno (errori sintattici sono quelli che causano il null dentro)
+ * SOLUZIONE
  * come risolvo il problema?
- * visito nach ei tipi::
- * - se visito un tipo ritorno null (come per le dichairazini) perchè faccio un controllo innterno sulla consisrtenza della dicahiarazione e torno null
- * 		se trova un errore lancia una complete exception
- * visito il tipo poi lo utilizzo; per evitare di scrivere due cose (quetso check va fatto tutte le volte che visitip un tipo che sta in un campo di un nodoo)
- * per evitare di visita e ritornare il tipo è stata aggiunta un metodo che checka il tipo attraverso la visita:
- * le fa il check e poi ritorna il tipo
+ * visito anche i tipi:
+ * - se visito un tipo ritorno null (come per le dichairazini) perchè faccio un controllo interno 
+ * 	sulla consistenza della dicahiarazione e torno null se trova un errore lancia una complete exception
+ * - visito il tipo poi lo utilizzo; per evitare di scrivere due cose 
+ * 									(questo check va fatto tutte le volte che visito un tipo che sta in un campo di un nodo)
+ *	per evitare di visita e ritornare il tipo è stata aggiunta un metodo che checka il tipo attraverso la visita:
+ *	le fa il check e poi ritorna il tipo
  */
 
 	@Override
 	public TypeNode visitSTentry(STentry entry) throws TypeException {
 		if (print) printSTentry("type");
-		return ckvisit(entry.type); //check
+		return ckvisit(entry.type); //check: fa una visita e ritorna il tipo su cui è stata chiamata la visita
 	}
 
 }
