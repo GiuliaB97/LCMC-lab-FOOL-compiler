@@ -4,9 +4,11 @@ import java.util.*;
 import compiler.AST.*;
 import compiler.exc.*;
 import compiler.lib.*;
-
+/*
+ * all'inizio nel linguaggio in cui non ho annidamenti ho solo il nesting level 0 
+ */
 public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
-	
+	private int decOffset=-1; // counter for offset of local declarations at current nesting level 
 	private List<Map<String, STentry>> symTable = new ArrayList<>();
 	private int nestingLevel=0; // current nesting level
 	int stErrors=0;
@@ -21,7 +23,11 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 			entry = symTable.get(j--).get(id);	
 		return entry;
 	}
-
+/*
+ * progletin npde  è colui che infoca le visite sui va node
+ * 
+ * quindi dec 
+ */
 	@Override
 	public Void visitNode(ProgLetInNode n) {
 		if (print) printNode(n);
@@ -68,12 +74,13 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		return null;
 	}
 	
+	//caso delle varibili
 	@Override
 	public Void visitNode(VarNode n) {
 		if (print) printNode(n);
 		visit(n.exp);
 		Map<String, STentry> hm = symTable.get(nestingLevel);
-		STentry entry = new STentry(nestingLevel,n.type);
+		STentry entry = new STentry(nestingLevel,n.type, decOffset--);//nuovo modo di fare palline, lo post decremento così è già settato per la prossima var
 		//inserimento di ID nella symtable
 		if (hm.put(n.id, entry) != null) {
 			System.out.println("Var id " + n.id + " at line "+ n.getLine() +" already declared");
@@ -143,7 +150,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 			System.out.println("Var or Par id " + n.id + " at line "+ n.getLine() + " not declared");
 			stErrors++;
 		} else 
-			n.entry = entry;
+			n.entry = entry;//attacco la pallina alla foglia
 		return null;
 	}
 
@@ -159,9 +166,6 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		return null;
 	}
 }
-
-//	private int decOffset=-1; // counter for offset of local declarations at current nesting level 
-
 
 //	int prevNLDecOffset=decOffset; // stores counter for offset of declarations at previous nesting level 
 
