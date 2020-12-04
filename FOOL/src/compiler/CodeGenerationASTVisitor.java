@@ -62,12 +62,37 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 	public String visitNode(FunNode n) {
 		if (print) printNode(n,n.id);
 		String funl = freshFunLabel();	//creazione fresh label
-		
-		for (ParNode par : n.parlist) visit(par);
-		for (Node dec : n.declist) visit(dec);
+		String declCode = null;
+		String localPar=null;
+		/*
+		 * 		String localdec=null;
+		if (print) printNode(n,n.id);
+		for (Node arg : n.arglist) visit(arg);
+		for (int i = n.arglist.size() - 1; i >= 0; i--) argCode = nlJoin(argCode, visit(n.arglist.get(i)));//Devo visitarle in ordine inverso perchè?che cosa sto salvando?
+		String getAR = null;
+		for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");//getAr codice che mi serve per raggiunger l'ar della dichiarazione; iterando sulla differenza di nesting level ad ogni iterazione aggiungo una lw alla stringa
+
+		 */
+		for (ParNode par : n.parlist) localPar=nlJoin(localPar,visit(par));
+		for (Node dec : n.declist) declCode=nlJoin(declCode,visit(dec));
 		visit(n.exp);
 		visit(n.exp);
-		putCode(nlJoin(funl+ ":" /*codice corpo funzione*/)); /*posto dove colleziono tutti i codici delle funzioni e
+		putCode(nlJoin(funl+ ":" +
+				/*codice corpo funzione*/
+				"push",
+				"cfp",
+				"lra",
+				declCode,
+				localPar,
+				"stm",
+				"pop",
+				"pop",
+				"pop",
+				"push",
+				"ltm",
+				"lra"
+				//jump
+				)); /*posto dove colleziono tutti i codici delle funzioni e
 		 														quando ho finito li metto tutti dopo
 		 														qui faccio push di un'etichetta a cui poi dovrò andare a mettere il corpo della funzione*/
 		return "push" + funl;

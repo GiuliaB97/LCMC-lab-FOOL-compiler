@@ -1,5 +1,8 @@
 // Generated from SVM.g4 by ANTLR 4.8
 package svm;
+
+import java.util.HashMap;
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -128,7 +131,7 @@ public class SVMLexer extends Lexer {
 	private void ERR_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 0:
-			 System.out.println("Invalid char: "+getText()+" at line "+getLine()); lexicalErrors++; 
+			 System.out.println("Invalid char: "+ getText()); lexicalErrors++; 
 			break;
 		}
 	}

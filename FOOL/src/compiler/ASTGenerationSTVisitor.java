@@ -10,7 +10,7 @@ import compiler.FOOLParser.*;
 import compiler.lib.*;
 import static compiler.lib.FOOLlib.*;
 /*
- * problema quanfo in visitFunDec e vidsitVarDec
+ * problema quando in visitFunDec e vidsitVarDec
  * le due produzioni potrebbero matchare solo parzialmente e quindi avere id=null
  * 
  * per var devo gestire solo un id : quello della variabile
