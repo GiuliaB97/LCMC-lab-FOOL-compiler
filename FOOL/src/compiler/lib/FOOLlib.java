@@ -25,6 +25,15 @@ public class FOOLlib {
 
 	// crea un'unica stringa a partire da un insieme di stringhe concatenadole e 
 	// introducendo, all'interno, dei newline "\n" come separatore tra le stringhe
+	/*
+	 * (4) : nlJoin in fool.lib: ha un nuomero variabile di argomenti : 
+	 * idea qui ci metto le istruzioni che voglio generare e lui me le concatena 
+	 * e le separa da dei new line: concatena le stringhe che gli passo come argomento, 
+	 * ignora i null e quindi gli argomenti che sono effettivamente delle stringhe 
+	 * le concatena in una stringa code mettendo in mezzo dei \n 
+	 * (mi raccomando sono in mezzo non alla fine)
+ 
+	 */
 	public static String nlJoin(String... lines) { //argomenti null ignorati 
 		String code = null;
 		for (int i = 0; i<lines.length; i++) 
@@ -32,25 +41,25 @@ public class FOOLlib {
 		return code;
 	}
 
-//	private static int labCount = 0;
-//
-//	public static String freshLabel() {
-//		return "label" + (labCount++);
-//	}
-//
-//	private static int funlabCount = 0;
-//
-//	public static String freshFunLabel() {
-//		return "function" + (funlabCount++);
-//	}
-//
-//	private static String funCode = null;
-//
-//	public static void putCode(String c) {
-//		funCode = nlJoin(funCode, "", c); //linea vuota di separazione prima di codice funzione
-//	}
-//
-//	public static String getCode() {
-//		return funCode;
-//	}
+	private static int labCount = 0;
+
+	public static String freshLabel() {
+		return "label" + (labCount++);
+	}
+
+	private static int funlabCount = 0;
+
+	public static String freshFunLabel() {
+		return "function" + (funlabCount++);
+	}
+
+	private static String funCode = null;
+
+	public static void putCode(String c) {
+		funCode = nlJoin(funCode, "", c); //linea vuota di separazione prima di codice funzione
+	}
+
+	public static String getCode() {
+		return funCode;
+	}
 }
