@@ -3,7 +3,6 @@ package compiler_lab9;
 import compiler.lib.*;
 import compiler_lab9.AST.*;
 
-
 /*
  * i metodi che implentano la visita sono stati rinominati nel lab 9 per gestire correttamente 
  * l'overloading di tipo statico: se si fossero chiamati tutti "visit" come in passato al momento 
@@ -107,17 +106,16 @@ public class PrintEASTVisitor extends BaseEASTVisitor<Void> {
 		return null;
 	}
 
+	/*di che tipo statico è par(?) par node così chiamarebbe direttamente parnode 
+	 * senza chiamare node che chiama accept-> problema per quello che riguarda l'indentazione
+	 * Soluzioni: fare una var node, far un cast (in particolare un upcast)
+	 * CHIEDI AIUTO
+	 */
 	@Override
 	public Void visitNode(FunNode n) {
 		printNode(n,n.id);
 		visit(n.retType);
-		for (compiler_lab9.AST.ParNode par : n.parlist) visit(par); 
-														/*di che tipo statico è par(?) par node così chiamarebbe direttamente parnode 
-														 * senza chiamare node che chiama accept-> problema per quello che riguarda l'indentazione
-														 * Soluzioni: fare una var node, far un cast (in particolare un upcast)
-														 * CHIEDI AIUTO
-														 */
-													
+		for (compiler_lab9.AST.ParNode par : n.parlist) visit(par); 													
 		for (Node dec : n.declist) visit(dec);
 		visit(n.exp);
 		return null;

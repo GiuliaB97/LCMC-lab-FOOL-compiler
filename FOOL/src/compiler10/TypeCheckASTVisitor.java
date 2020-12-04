@@ -1,7 +1,7 @@
-package compiler;
+package compiler10;
 
-import compiler.AST.*;
 import compiler.lib.*;
+import compiler10.AST.*;
 import compiler.exc.*;
 import static compiler.lib.FOOLlib.*;
 /*???

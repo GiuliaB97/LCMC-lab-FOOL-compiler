@@ -1,11 +1,11 @@
-package compiler_lab7;
+package compiler_lab8;
 
 import org.antlr.v4.runtime.tree.*;
 
 import compiler.FOOLBaseVisitor;
 import compiler.FOOLParser.*;
 import compiler.lib.*;
-import compiler_lab7.AST.*;
+import compiler_lab8.AST.*;
 
 /*'ASTGeneration': perchè sto facendo questa cosa: per generare l'AST 'STVisitor':
 suffisso cosa sto visitando le classi context*/

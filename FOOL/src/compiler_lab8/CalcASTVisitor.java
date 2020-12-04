@@ -1,7 +1,7 @@
-package compiler_lab7;
+package compiler_lab8;
 
 import compiler.lib.*;
-import compiler_lab7.AST.*;
+import compiler_lab8.AST.*;
 
 public class CalcASTVisitor extends BaseASTVisitor<Integer> {
 

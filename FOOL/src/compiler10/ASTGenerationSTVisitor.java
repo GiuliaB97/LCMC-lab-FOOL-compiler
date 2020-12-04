@@ -1,13 +1,15 @@
-package compiler;
+package compiler10;
 
 import java.util.*;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import compiler.AST.*;
+import compiler.FOOLBaseVisitor;
 import compiler.FOOLParser.*;
 import compiler.lib.*;
+import compiler10.AST.*;
+
 import static compiler.lib.FOOLlib.*;
 
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
@@ -17,9 +19,10 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	
     ASTGenerationSTVisitor() {}    
     ASTGenerationSTVisitor(boolean debug) { print=debug; }
-        
+
     private void printVarAndProdName(ParserRuleContext ctx) {
-        String prefix="";        
+        String prefix="";    
+        
     	Class<?> ctxClass=ctx.getClass(), parentClass=ctxClass.getSuperclass();
         if (!parentClass.equals(ParserRuleContext.class)) // parentClass is the var context (and not ctxClass itself)
         	prefix=lowerizeFirstChar(extractCtxName(parentClass.getName()))+": production #";
@@ -28,7 +31,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
         
     @Override
 	public Node visit(ParseTree t) {
-    	if (t==null) return null;
+    	if (t==null) return null;//gestisce i tree incomplete per evitare le null pointer exception; così se una visita ritorna null ST incompleto diventa un AST incompleto (ho dei figli null) ma posso andare avanti e spostare il problema sull'(E)AST che andranno gestiti
         String temp=indent;
         indent=(indent==null)?"":indent+"  ";
         Node result = super.visit(t);
@@ -68,7 +71,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	public Node visitPlus(PlusContext c) {
 		if (print) printVarAndProdName(c);
 		Node n = new PlusNode(visit(c.exp(0)), visit(c.exp(1)));
-		n.setLine(c.PLUS().getSymbol().getLine());	
+		n.setLine(c.PLUS().getSymbol().getLine());		// setLine added
         return n;		
 	}
 
@@ -76,18 +79,15 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	public Node visitEq(EqContext c) {
 		if (print) printVarAndProdName(c);
 		Node n = new EqualNode(visit(c.exp(0)), visit(c.exp(1)));
-		n.setLine(c.EQ().getSymbol().getLine());		
+		n.setLine(c.EQ().getSymbol().getLine());		// setLine added		
         return n;		
 	}
 
 	@Override
 	public Node visitVardec(VardecContext c) {
 		if (print) printVarAndProdName(c);
-		Node n = null;
-		if (c.ID()!=null) { //non-incomplete ST
-			n = new VarNode(c.ID().getText(), (TypeNode) visit(c.type()), visit(c.exp()));
-			n.setLine(c.VAR().getSymbol().getLine());
-		}
+		Node n = new VarNode(c.ID().getText(), (TypeNode) visit(c.type()), visit(c.exp()));
+		n.setLine(c.VAR().getSymbol().getLine());
         return n;
 	}
 
@@ -96,17 +96,14 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		if (print) printVarAndProdName(c);
 		List<ParNode> parList = new ArrayList<>();
 		for (int i = 1; i < c.ID().size(); i++) { 
-			ParNode p = new ParNode(c.ID(i).getText(),(TypeNode) visit(c.type(i)));
+			ParNode p = new ParNode(c.ID(i).getText(), (TypeNode) visit(c.type(i)));
 			p.setLine(c.ID(i).getSymbol().getLine());
 			parList.add(p);
 		}
 		List<Node> decList = new ArrayList<>();
 		for (DecContext dec : c.dec()) decList.add(visit(dec));
-		Node n = null;
-		if (c.ID().size()>0) { //non-incomplete ST
-			n = new FunNode(c.ID(0).getText(),(TypeNode)visit(c.type(0)),parList,decList,visit(c.exp()));
-			n.setLine(c.FUN().getSymbol().getLine());
-		}
+		Node n = new FunNode( c.ID(0).getText(), (TypeNode) visit(c.type(0)), parList, decList, visit(c.exp()) );
+		n.setLine(c.FUN().getSymbol().getLine());
         return n;
 	}
 
@@ -148,7 +145,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		Node thenNode = visit(c.exp(1));
 		Node elseNode = visit(c.exp(2));
 		Node n = new IfNode(ifNode, thenNode, elseNode);
-		n.setLine(c.IF().getSymbol().getLine());			
+		n.setLine(c.IF().getSymbol().getLine());			// setLine added
         return n;		
 	}
 

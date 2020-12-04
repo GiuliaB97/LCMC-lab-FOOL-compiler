@@ -1,4 +1,4 @@
-package compiler_lab7;
+package compiler_lab8;
 
 import compiler.lib.*;
 /*Syntax Tree albero di parsing che data una grammatica e 

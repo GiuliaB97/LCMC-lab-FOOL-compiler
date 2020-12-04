@@ -17,24 +17,40 @@ public class FOOLlib {
     }
     
 	public static int typeErrors = 0;
-	/*
-	 * idea : questo metodo definisce la relazione di subtyping
-	 * ora consideriamo i boolean sottotipi di interi assumento che true=1 e false=0
-	 * questa non è l'unica possibilità 
-	 * il subtyping fa parte del linguaggio che sis ta creando.
-	 * 
-	 * valuta se il tipo "a" e' <= al tipo "b", 
-	 * dove "a" e "b" sono tipi di base: IntTypeNode o BoolTypeNode
-	 * a e b sono tipi di base: i casi in cui mi va bene sono:
-	 * 	sono entrambi dello stesso tipo; quindi sono sottotipi(<= considera ilc asod ell'ugualianza)
-	 * ma esiste anche il caso in cui a sia effettivamente sottotipo di b 
-	 */
+
+	// valuta se il tipo "a" e' <= al tipo "b", dove "a" e "b" sono tipi di base: IntTypeNode o BoolTypeNode
 	public static boolean isSubtype(TypeNode a, TypeNode b) {
 		return a.getClass().equals(b.getClass()) || ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode));
 	}
+
+	// crea un'unica stringa a partire da un insieme di stringhe concatenadole e 
+	// introducendo, all'interno, dei newline "\n" come separatore tra le stringhe
+	public static String nlJoin(String... lines) { //argomenti null ignorati 
+		String code = null;
+		for (int i = 0; i<lines.length; i++) 
+			if (lines[i]!=null) code = (code==null?"":code+"\n")+lines[i]; 
+		return code;
+	}
+
+//	private static int labCount = 0;
+//
+//	public static String freshLabel() {
+//		return "label" + (labCount++);
+//	}
+//
+//	private static int funlabCount = 0;
+//
+//	public static String freshFunLabel() {
+//		return "function" + (funlabCount++);
+//	}
+//
+//	private static String funCode = null;
+//
+//	public static void putCode(String c) {
+//		funCode = nlJoin(funCode, "", c); //linea vuota di separazione prima di codice funzione
+//	}
+//
+//	public static String getCode() {
+//		return funCode;
+//	}
 }
-	
-
-
-
-

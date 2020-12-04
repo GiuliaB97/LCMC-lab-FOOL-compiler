@@ -111,10 +111,10 @@ public class AST {
 
 	public static class FunNode extends Node {
 		String id;
-		Node retType;
-		List<ParNode> parlist;
-		List<Node> declist; 
-		Node exp;
+		Node retType;																		//tipo di ritprno della funzione?	
+		List<ParNode> parlist;																//perchè mi serve una lista di par?
+		List<Node> declist; 																//lista delle dichiarazioni presenti nella funzione?
+		Node exp;																			//exp: resto del programma al di fuori delle dichiarazioni?
 		FunNode(String i, Node rt, List<ParNode> pl, List<Node> dl, Node e) {
 	    	id=i; retType=rt; parlist=pl; declist=dl; exp=e;}
 		
@@ -133,8 +133,8 @@ public class AST {
 
 	public static class CallNode extends Node {
 		String id;
-		List<Node> arglist;
-		STentry entry;
+		List<Node> arglist;																	//lista degli argomenti passari alla funzione 
+		STentry entry;																		
 		CallNode(String i, List<Node> p) {id = i; arglist = p;}
 
 		@Override

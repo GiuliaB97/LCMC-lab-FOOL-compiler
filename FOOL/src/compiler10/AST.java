@@ -1,8 +1,11 @@
-package compiler;
+package compiler10;
 
 import java.util.*;
 import compiler.lib.*;
-
+/*
+ * riordinati per mantenere un ordine fisso
+ * Cambiati i nodi che sono tipi ora ereditano da type node
+ */
 public class AST {
 	
 	public static class ProgLetInNode extends Node {
@@ -53,7 +56,29 @@ public class AST {
 		@Override
 		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
 	}
-		
+	
+	public static class ArrowTypeNode extends TypeNode {
+		List<TypeNode> parlist;
+		TypeNode ret;
+		//Lui è un tipo funzionale e gli passo tipi di parametri e tipi di ritorno
+		ArrowTypeNode(List<TypeNode> p, TypeNode r) {parlist = p; ret = r;}
+
+		@Override
+		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+	}
+
+	public static class BoolTypeNode extends TypeNode {
+
+		@Override
+		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+	}
+
+	public static class IntTypeNode extends TypeNode {
+
+		@Override
+		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+	}
+	
 	public static class PrintNode extends Node {
 		Node exp;
 		PrintNode(Node e) {exp = e;}
@@ -103,7 +128,7 @@ public class AST {
 		String id;
 		List<Node> arglist = new ArrayList<Node>();
 		STentry entry;
-		//int nl;
+		int nl;
 		CallNode(String i, List<Node> p) {id = i; arglist = p;}
 
 		@Override
@@ -113,7 +138,7 @@ public class AST {
 	public static class IdNode extends Node {
 		String id;
 		STentry entry;
-		//int nl;
+		int nl;
 		IdNode(String i) {id = i;}
 
 		@Override
@@ -135,26 +160,5 @@ public class AST {
 		@Override
 		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
 	}
-	
-	public static class ArrowTypeNode extends TypeNode {
-		List<TypeNode> parlist;
-		TypeNode ret;
-		ArrowTypeNode(List<TypeNode> p, TypeNode r) {parlist = p; ret = r;}
 
-		@Override
-		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
-	}
-	
-	public static class BoolTypeNode extends TypeNode {
-
-		@Override
-		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
-	}
-
-	public static class IntTypeNode extends TypeNode {
-
-		@Override
-		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
-	}
-
-}
+}	

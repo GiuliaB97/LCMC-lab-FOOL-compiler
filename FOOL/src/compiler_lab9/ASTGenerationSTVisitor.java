@@ -86,8 +86,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitProg(ProgContext c) {
 		if (print) printVarAndProdName(c);
-		//quando visito il prgo restituisco il progbody che poi andrà nei due casi
-		return visit(c.progbody());
+		return visit(c.progbody());//quando visito il prgo restituisco il progbody che poi andrà nei due casi
 	}
 	
 	/*
@@ -96,18 +95,17 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	 * creare un nodo apposta ProgLetInNode che avrà 
 	 * un array di figli: le sue dichiarazioni e il figlio 
 	 * con il corpo del programma
-	 * 
+	 *
+	 *	ciclo su tutti i figli dec (le dichairazioni delle var) c.dec: 
+	 *	restituisce una lista di tutti i figli dell'albero sintattico di dec; 
+	 *	io li scorro tutti chiamandoci una visita;
+	 *	li colleziono e li menttto in un campo declist
 	 */
-
 	@Override
 	public Node visitLetInProg(LetInProgContext c) { 
 		if (print) printVarAndProdName(c);
 		List<Node> declist =new ArrayList<>();
-		for (DecContext dec : c.dec())  declist.add(visit(dec));		/*ciclo su tutti i figli dec (le dichairazioni delle var) c.dec: 
-																		*	restituisce una lista di tutti i figli dell'albero sintattico di dec; 
-																		*	io li scorro tutti chiamandoci una visita;
-																		*	 li colleziono e li menttto in un campo declist
-																		*/
+		for (DecContext dec : c.dec())  declist.add(visit(dec));		
 		visit(c.exp());
 		return new ProgLetInNode(declist, visit(c.exp()));
 	}
@@ -243,10 +241,8 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	@Override
 	public Node visitCall(CallContext c) {
 		if (print) printVarAndProdName(c);		
-		// esercizio
 		List<Node> arglist = new ArrayList<>();
 		for (ExpContext arg : c.exp()) arglist.add(visit(arg));
-		//
 		Node n = new CallNode(c.ID().getText(),arglist);
 		n.setLine(c.ID().getSymbol().getLine());
 		return n;

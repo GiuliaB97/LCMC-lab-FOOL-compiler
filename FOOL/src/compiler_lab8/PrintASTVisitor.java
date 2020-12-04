@@ -1,8 +1,7 @@
-package compiler_lab7;
+package compiler_lab8;
 
 import compiler.lib.*;
-//PrintASTVisitor: visitot l'AST e cosa faccio stampo
-import compiler_lab7.AST.*;
+import compiler_lab8.AST.*;
 
 //la stampa del nome viene fatta direttaemnte con la reflection 
 
