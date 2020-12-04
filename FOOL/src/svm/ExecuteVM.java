@@ -5,7 +5,7 @@ public class ExecuteVM {
     public static final int MEMSIZE = 10000;
     
     private int[] code;
-    private int[] memory = new int[MEMSIZE];
+    private int[] memory = new int[MEMSIZE];//indirizzo più alto della memoria
     
     private int ip = 0;
     private int sp = MEMSIZE;
