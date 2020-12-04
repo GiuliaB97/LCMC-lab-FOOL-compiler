@@ -1,7 +1,7 @@
 // Generated from SVM.g4 by ANTLR 4.8
 package svm;
 
-import java.util.HashMap;
+import java.util.*;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -96,25 +96,11 @@ public class SVMParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-
-	int[] code = new int[ExecuteVM.CODESIZE];  /* code � un array di interi che conterr� il codice oggetto
-	 											* creato vuoto; con sta costante,
-	 											* idea tutte le volte che vedo un'istruzione vado a 
-	 											* popolare l'array code''
-	 											* ed incremento la i
-	 											* occhio: non stiamo eseguendo ma stiamo 
-	 											* trasformando il resto in numeri
-	 											*  */  
-	private int i = 0; /*non stiamo eseguendo ma trasformando il testo in numeri la i verr� incrementata */
-						/* ad ogni token viene associato in maniera automatica da antlr 
-						 * un numero(SVM.tokens)
-						 */
-	private HashMap<String,Integer> labelDef = new HashMap<String,Integer>();	/* chiave id numerico
-																				 * le chiavi push pop 
-																				 */ 
-	private HashMap<Integer,String> labelRef = new HashMap<Integer,String>();	/* id numerico chiave
-																				 * un numero per ogni token
-																				 */
+	 
+	public int[] code = new int[ExecuteVM.CODESIZE];    
+	    private int i = 0;
+	    private Map<String,Integer> labelDef = new HashMap<>();
+	    private Map<Integer,String> labelRef = new HashMap<>();
 
 	public SVMParser(TokenStream input) {
 		super(input);
@@ -163,13 +149,8 @@ public class SVMParser extends Parser {
 			}
 			setState(10);
 			match(EOF);
-			for(Integer j: labelRef.keySet()) /*
-			 * recuperare il token che a chiave j
-			 */
-										code[j]=labelDef.get(labelRef.get(j));/*
-										 * dato l'id numerico recupero il simbolo ad esso asssociato e lo salvo nell'array contennte tutto il programma 
-										 * questo � quello che vado a 
-																			* mettere come indirizzo nel buco*/
+			 for (Integer j: labelRef.keySet()) 
+											code[j]=labelDef.get(labelRef.get(j)); 
 										
 			}
 		}
@@ -238,8 +219,8 @@ public class SVMParser extends Parser {
 				match(PUSH);
 				setState(14);
 				((InstructionContext)_localctx).n = match(INTEGER);
-					code[i++] = PUSH;	
-				        				code[i++] =	Integer.parseInt((((InstructionContext)_localctx).n!=null?((InstructionContext)_localctx).n.getText():null));
+				code[i++] = PUSH; 
+							              code[i++] = Integer.parseInt((((InstructionContext)_localctx).n!=null?((InstructionContext)_localctx).n.getText():null));
 				}
 				break;
 			case 2:
@@ -249,8 +230,8 @@ public class SVMParser extends Parser {
 				match(PUSH);
 				setState(17);
 				((InstructionContext)_localctx).l = match(LABEL);
-				code[i++] = PUSH;			
-						  			labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
+				code[i++] = PUSH; 
+					    		             labelRef.put(i++,(((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
 				}
 				break;
 			case 3:
@@ -326,8 +307,8 @@ public class SVMParser extends Parser {
 				match(BRANCH);
 				setState(37);
 				((InstructionContext)_localctx).l = match(LABEL);
-					code[i++] = BRANCH;			
-					  						labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
+				code[i++] = BRANCH;
+				                       labelRef.put(i++,(((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
 				}
 				break;
 			case 12:
@@ -337,8 +318,8 @@ public class SVMParser extends Parser {
 				match(BRANCHEQ);
 				setState(40);
 				((InstructionContext)_localctx).l = match(LABEL);
-					code[i++] = BRANCHEQ;			
-					  						labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
+				code[i++] = BRANCHEQ;
+				                        labelRef.put(i++,(((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
 				}
 				break;
 			case 13:
@@ -348,8 +329,8 @@ public class SVMParser extends Parser {
 				match(BRANCHLESSEQ);
 				setState(43);
 				((InstructionContext)_localctx).l = match(LABEL);
-					code[i++] = BRANCHLESSEQ;			
-					  						labelRef.put(i++, (((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
+				code[i++] = BRANCHLESSEQ;
+				                          labelRef.put(i++,(((InstructionContext)_localctx).l!=null?((InstructionContext)_localctx).l.getText():null));
 				}
 				break;
 			case 14:

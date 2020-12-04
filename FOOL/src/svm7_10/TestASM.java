@@ -1,6 +1,9 @@
-package svm;
+package svm7_10;
 
 import org.antlr.v4.runtime.*;
+
+import svm.SVMLexer;
+import svm.SVMParser;
 
 public class TestASM {
     public static void main(String[] args) throws Exception {

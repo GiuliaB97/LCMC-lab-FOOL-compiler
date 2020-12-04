@@ -1,7 +1,7 @@
 // Generated from SVM.g4 by ANTLR 4.8
 package svm;
 
-import java.util.HashMap;
+import java.util.*;
 
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 

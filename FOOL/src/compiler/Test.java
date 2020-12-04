@@ -4,8 +4,8 @@ import java.io.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import compiler.lib.*;
+import svm7_10.*;
 import compiler.exc.*;
-import svm.*;
 
 public class Test {
     public static void main(String[] args) throws Exception {
