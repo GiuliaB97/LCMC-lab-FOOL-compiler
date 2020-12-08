@@ -120,18 +120,26 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
  * NB la pallina è stata inizializzata da SymbolTAbleASTVisitor
  * 
  * A
- * dentro la pallina ho una marea di cose io controllo che sia un arrowtype node  se non lo è lancio errore 
+ * dentro la pallina ho una marea di cose io controllo che sia un arrowtype node  
+ * ---> quindi che sia effettivamente dichiarata come una funzione
+ * se non lo è lancio errore 
  * 
  * B
- * narglist contiene i miei figli che sono gli argomenti che uso per choaare la funzione
+ * controllo che numero parametri formali sia == al numero degli argomenti
+ * narglist contiene i miei figli che sono le espressioni che uso come argomenti che uso per chiaare la funzione
  * at.parlist.size(): numero degli argomenti con cui è dichiarata						
  * n.arglist.size(): numero argomenti effettivi
  * -----> quando viene  inizializzata una  l'altra
  * 
  * C
- * controllo 
+ * controllo : scorro le posizioni in uno qualsiasi dei due array da 0 a n-1
+ * prendo l'argomento i-esimo, lo visito, mi restituisce il tipo e controllo che corrisponda al tipo
+ * dichiarato per il parametro formle i-esimo (devono essere uno sottotipo dell'altro)
+ * -->Liskov substitution principle: The principle defines that objects of a superclass shall be replaceable with objects of its subclasses without breaking the application. That requires the objects of your subclasses to behave in the same way as the objects of your superclass
+ * se non funziona per uno dei sottoparametri --> errore
  * 
- * torno il tipo che nella dichiarazione di questa funzione è il tipo di ritorno (Campo ret della classe ArrowTypeNode
+ * torno il tipo che nella dichiarazione di questo identificatore
+ * in questo caso dichiarato come funzione è il tipo di ritorno (Campo ret della classe ArrowTypeNode
  * 
  * PROBLEMA:
  * la entry potrebbe essere null: in caso di errori; per questo visito la netry
@@ -141,9 +149,15 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 	public TypeNode visitNode(CallNode n) throws TypeException {
 		if (print) printNode(n,n.id);
 		TypeNode t = visit(n.entry); // STentry visit
+									/*
+									 * pallina messa dal symboltable atsvisitor; usando la sym table
+									 * qui quindi ci sono le informazioni sulla dichairazione
+									 * estraggo il tipo e loo memorizzo
+									 *  ,n.getLine() prende il numero di linea dal nodo
+									 */
 		if ( !(t instanceof ArrowTypeNode) ) //A
 			throw new TypeException("Invocation of a non-function "+n.id,n.getLine());
-		ArrowTypeNode at = (ArrowTypeNode) t;
+		ArrowTypeNode at = (ArrowTypeNode) t;//downcast
 		if ( !(at.parlist.size() == n.arglist.size()) ) //B
 			throw new TypeException("Wrong number of parameters in the invocation of "+n.id,n.getLine());
 		for (int i = 0; i < n.arglist.size(); i++)
@@ -218,6 +232,12 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
  * 									(questo check va fatto tutte le volte che visito un tipo che sta in un campo di un nodo)
  *	per evitare di visita e ritornare il tipo è stata aggiunta un metodo che checka il tipo attraverso la visita:
  *	le fa il check e poi ritorna il tipo
+ *
+ *se chiamo base ast con null questi lancia una incomplete exception
+ *
+ *arrowtype node: tipi funzionali
+ *la visita di un tipo così coem di una dichiarazione torno null perchè faccio un controllo 
+ *interno sulla consistenza della dichiarazione
  */
 
 	@Override

@@ -24,7 +24,7 @@ import static compiler.lib.FOOLlib.*;
  *  Come funziona sta roba del match , riguarda metodo fun 
  *  ricorsione a dx sx nella grammatica????
  *  
- *  Il comportamento di antlr in caso di syntax error è poco documentato, se un  
+ *  Il comportamento di antlr in caso di syntax error è poco documentato, se un ?? 
  *  
  */
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
@@ -112,7 +112,8 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	public Node visitFundec(FundecContext c) {
 		if (print) printVarAndProdName(c);
 		List<ParNode> parList = new ArrayList<>();
-		for (int i = 1; i < c.ID().size(); i++) { //finchè sto nel raggio del size sono tranquilla perchè???
+		for (int i = 1; i < c.ID().size(); i++) { 
+			//finchè sto nel raggio del size sono tranquilla perchè???
 			ParNode p = new ParNode(c.ID(i).getText(),(TypeNode) visit(c.type(i)));
 			p.setLine(c.ID(i).getSymbol().getLine());
 			parList.add(p);

@@ -95,7 +95,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	public Node visitFundec(FundecContext c) {
 		if (print) printVarAndProdName(c);
 		List<ParNode> parList = new ArrayList<>();
-		for (int i = 1; i < c.ID().size(); i++) { 
+		for (int i = 1; i < c.ID().size(); i++) { //finchè sto nel raggio del size sono tranquillo di non avere null
 			ParNode p = new ParNode(c.ID(i).getText(), (TypeNode) visit(c.type(i)));
 			p.setLine(c.ID(i).getSymbol().getLine());
 			parList.add(p);

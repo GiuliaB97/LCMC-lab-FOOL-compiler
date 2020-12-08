@@ -10,7 +10,39 @@ public int lexicalErrors=0;
   
 prog  : progbody EOF ;
      
-progbody : LET dec+ IN exp SEMIC  #letInProg
+progbody : LET dec+ IN exp SEMIC  #letInProg	/*let ha almeno una dichiarazione (che può essere:
+												* una funzione (vardec), o una variabile (vardec)
+												*/	
+/*
+ *  Dichiarazioni come nel linguaggio funzionale ML (Meta Language)
+	-------------
+	in C/java
+	{
+	int X = 5;
+	int y = 6;
+	
+	codice senza dichiarazioni
+	}
+	------------------
+	let
+	
+	int X = 5;
+	int y = 6;
+	
+	in
+	
+	codice senza dichiarazioni
+	;
+	-----------------------
+	//ATTENZIONE: posso avere scope annidati
+	* //nesting level 0(ambiente globale): nome funzione
+	int pippo (int x){  
+		//nesting level1: dichiarazioni + chiamate a funzione
+		double y	 
+		print(x+y)
+		//nb : g qui è visto ma è dichiarato un livello sopra
+	}
+ */						
          | exp SEMIC              #noDecProg
          ;
  

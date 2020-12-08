@@ -1,7 +1,7 @@
 // Generated from SVM.g4 by ANTLR 4.8
 package svm;
 
-import java.util.HashMap;
+	import java.util.HashMap;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -163,13 +163,8 @@ public class SVMParser extends Parser {
 			}
 			setState(10);
 			match(EOF);
-			for(Integer j: labelRef.keySet()) /*
-			 * recuperare il token che a chiave j
-			 */
-										code[j]=labelDef.get(labelRef.get(j));/*
-										 * dato l'id numerico recupero il simbolo ad esso asssociato e lo salvo nell'array contennte tutto il programma 
-										 * questo � quello che vado a 
-																			* mettere come indirizzo nel buco*/
+			for(Integer j: labelRef.keySet())
+										code[j]=labelDef.get(labelRef.get(j));	
 										
 			}
 		}
@@ -239,7 +234,7 @@ public class SVMParser extends Parser {
 				setState(14);
 				((InstructionContext)_localctx).n = match(INTEGER);
 					code[i++] = PUSH;	
-				        				code[i++] =	Integer.parseInt((((InstructionContext)_localctx).n!=null?((InstructionContext)_localctx).n.getText():null));
+				        			code[i++] =	Integer.parseInt((((InstructionContext)_localctx).n!=null?((InstructionContext)_localctx).n.getText():null));
 				}
 				break;
 			case 2:

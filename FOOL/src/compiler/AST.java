@@ -6,7 +6,7 @@ import compiler.lib.*;
 public class AST {
 	
 	public static class ProgLetInNode extends Node {
-		List<Node> declist;
+		List<Node> declist; //lista delle dichiarazioni 
 		Node exp;
 		ProgLetInNode(List<Node> d, Node e) {declist = d; exp = e;}
 
@@ -51,7 +51,9 @@ public class AST {
 		VarNode(String i, TypeNode t, Node v) {id = i; type = t; exp = v;}
 
 		@Override
-		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {
+			return visitor.visitNode(this);
+			}
 	}
 		
 	public static class PrintNode extends Node {
@@ -101,7 +103,7 @@ public class AST {
 	
 	public static class CallNode extends Node {
 		String id;
-		List<Node> arglist = new ArrayList<Node>();
+		List<Node> arglist = new ArrayList<Node>();//lista degli argomenti con cui chiamo la funzione
 		STentry entry;
 		int nl;
 		CallNode(String i, List<Node> p) {id = i; arglist = p;}
@@ -117,7 +119,9 @@ public class AST {
 		IdNode(String i) {id = i;}
 
 		@Override
-		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {
+			return visitor.visitNode(this);
+			}
 	}
 	
 	public static class BoolNode extends Node {
@@ -142,19 +146,25 @@ public class AST {
 		ArrowTypeNode(List<TypeNode> p, TypeNode r) {parlist = p; ret = r;}
 
 		@Override
-		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {
+			return visitor.visitNode(this);
+			}
 	}
 	
 	public static class BoolTypeNode extends TypeNode {
 
 		@Override
-		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {
+			return visitor.visitNode(this);
+			}
 	}
 
 	public static class IntTypeNode extends TypeNode {
 
 		@Override
-		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {
+			return visitor.visitNode(this);
+			}
 	}
 
 }

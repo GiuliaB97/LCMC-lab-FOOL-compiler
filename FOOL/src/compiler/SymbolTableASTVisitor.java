@@ -7,6 +7,7 @@ import compiler.lib.*;
 /*
  * all'inizio nel linguaggio in cui non ho annidamenti ho solo il nesting level 0 
  */
+
 public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 	private int decOffset=-2; /* counter for offset of local declarations at current nesting level; 
 								*parte da -2 perchè nel mio ar layout ad offset -1 ho il return address
@@ -17,13 +18,17 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 	
 	SymbolTableASTVisitor() {}
 	SymbolTableASTVisitor(boolean debug) {super(debug);} // enables print for debugging
-
+//operation is used to search a name in the symbol table
 	private STentry stLookup(String id) {
 		int j = nestingLevel;
 		STentry entry = null;
 		while (j >= 0 && entry == null) 
-			entry = symTable.get(j--).get(id);	
-		return entry;
+			entry = symTable.get(j--)	//la prima get mi da la mappa al nesting level a cui mi trovo:  
+							.get(id);	/*lì cerco se è dichiarata la funzione/variabile che sto cercando
+										se non c'è vado al nesting level precedente (che mi racchiude sintatticamente)
+										(Con la prima get);
+										se arrivata a 0 nesting level globale non c'è vado a Lourdes (non è stata dichairata e tono null)*/
+		return entry;// torno la entry corrispondente a quello che sto cercando o niente
 	}
 /*
  * progletin node  è colui che infoca le visite sui va node
@@ -173,10 +178,3 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		return null;
 	}
 }
-
-//	int prevNLDecOffset=decOffset; // stores counter for offset of declarations at previous nesting level 
-
-//	decOffset=prevNLDecOffset; // restores counter for offset of declarations at previous nesting level 
-
-
-//	n.nl = nestingLevel; //

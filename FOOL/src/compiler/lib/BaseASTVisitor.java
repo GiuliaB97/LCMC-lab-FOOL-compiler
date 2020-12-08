@@ -22,12 +22,19 @@ public class BaseASTVisitor<S,E extends Exception> {
 	protected void printNode(Node n, String s) {
 		System.out.println(indent+extractNodeName(n.getClass().getName())+": "+s);
 	}
+/*
+ * 		> visit(Visitable v)
+			> Chiama: visit(Visitable v, String mark)
+				> Chiama: visitByAcc(sul visito)
+					> Chiama:	accept(sull'istanza della classe corretta);
+						 		È il famoso metodo dell'interfaccia Visitable
 
+ */
 	public S visit(Visitable v) throws E {
 		return visit(v, "");                //performs unmarked visit
 	}
 	
-	public S visit(Visitable v, String mark) throws E {   //when printing marks this visit with string mark
+	public S visit(Visitable v, String mark) throws E {//when printing marks this visit with string mark
 		if (v==null)                                      
 			if (incomplExc) throw new IncomplException(); 
 			else                                         
