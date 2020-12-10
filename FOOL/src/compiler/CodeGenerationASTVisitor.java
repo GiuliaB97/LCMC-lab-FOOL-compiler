@@ -226,12 +226,11 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 
 	@Override
 	public String visitNode(CallNode n) {
-		String argCode=null;
 		if (print) printNode(n,n.id);
-		for (Node arg : n.arglist) visit(arg);
-		for (int i = n.arglist.size() - 1; i >= 0; i--) argCode = nlJoin(argCode, visit(n.arglist.get(i)));
-				//Devo visitarle in ordine inverso perchè?che cosa sto salvando?
-		String getAR = null;
+		String argCode = null, getAR = null;
+		for (int i=n.arglist.size()-1;i>=0;i--) argCode=
+				nlJoin(argCode,visit(n.arglist.get(i)));
+		for (int i = 0;i<n.nl-n.entry.nl;i++) getAR=nlJoin(getAR,"lw");
 		for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = 
 				nlJoin(getAR, "lw");/*getAr codice che mi serve per raggiungere l'ar della dichiarazione; 
 									 iterando sulla differenza di nesting level ad ogni iterazione 
