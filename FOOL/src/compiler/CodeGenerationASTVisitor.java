@@ -255,11 +255,11 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		*/
 	
 		return nlJoin(
-				"lfp",					//prendo il valore fp e lo metto sulla cima dello stack;
-											//retrieve address of frame containing "id" declaration
+				"lfp",						//retrieve address of frame containing "id" declaration
 				getAR, 					/*per raggiungere il frame corretto devo risalire la catena 
-											degli access link dopo aver fatto lw punto al fram che mi 
-											richiude sintatticamente ed in particolare punto al suo access link
+											degli access link dopo aver fatto lw punto al frame che mi 
+											richiude sintatticamente ed in particolare punto al suo 
+											access link
 											*/
 											// by following the static chain (of Access Links)
 				"push" +n.entry.offset,	//metto l'offset sullo stack
