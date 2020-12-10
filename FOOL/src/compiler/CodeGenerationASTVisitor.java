@@ -231,32 +231,18 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		for (int i=n.arglist.size()-1;i>=0;i--) argCode=
 				nlJoin(argCode,visit(n.arglist.get(i)));
 		for (int i = 0;i<n.nl-n.entry.nl;i++) getAR=nlJoin(getAR,"lw");
-		for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = 
-				nlJoin(getAR, "lw");/*getAr codice che mi serve per raggiungere l'ar della dichiarazione; 
-									 iterando sulla differenza di nesting level ad ogni iterazione 
-									 aggiungo una lw alla stringa*/
-
 		return nlJoin(
-				"lfp",	/*prima cosa da fare caricare sullo stack il control link; 
-						il frame dove sono adesso è lfp: ossia il frame del chiamante (sono io)
-						*/
-						// load Control Link (pointer to frame of function "id" caller)
-				argCode,/*mette il valore degli argomenti sullo stack*/
-							// generate code for argument expressions in reversed order
-						/*il valore dell'access link è il puntatore al frame dove è dichairata la funzione ; 
-						lo stesso frame dove è dichairata la funzione mi serve anche per l'indirizzo della 
-						funzione(che troverò tramite l'offset)*/
-				"lfp",		// retrieve address of frame containing "id" declaration
-				getAR,		// by following the static chain (of Access Links)
-				"stm",  /*poppa un valore dallo stack e lo mette nel?? ltm la prima volta setta l'accesslink, 
-						l'altro lo uso per recueprare l'indirizzo della funzione ed effettjujare il salto*/
-							// set $tm to popped value (with the aim of duplicating top of stack)
-				"ltm",		// load Access Link (pointer to frame of function "id" declaration)
-				"ltm",		// duplicate top of stack
-				"push " + n.entry.offset, "add",// compute address of "id" declaration)
-				"lw",		// load address of "id" function
-				"js"		// jump to popped address (saving address of subsequent instruction in $ra)
-				);
+				"lfp", // load Control Link (pointer to frame of function "id" caller)
+				argCode, // generate code for argument expressions in reversed order
+				"lfp", getAR, // retrieve address of frame containing "id" declaration
+	                          // by following the static chain (of Access Links)
+	            "stm", // set $tm to popped value (with the aim of duplicating top of stack)
+	            "ltm", // load Access Link (pointer to frame of function "id" declaration)
+	            "ltm", // duplicate top of stack
+	            "push "+n.entry.offset, "add", // compute address of "id" declaration
+				"lw", // load address of "id" function
+	            "js"  // jump to popped address (saving address of subsequent instruction in $ra)
+			);
 	}
 
 	@Override
