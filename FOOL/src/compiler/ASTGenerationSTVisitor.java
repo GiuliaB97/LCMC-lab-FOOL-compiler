@@ -9,24 +9,7 @@ import compiler.AST.*;
 import compiler.FOOLParser.*;
 import compiler.lib.*;
 import static compiler.lib.FOOLlib.*;
-/*
- * problema quando in visitFunDec e vidsitVarDec
- * le due produzioni potrebbero matchare solo parzialmente e quindi avere id=null
- * 
- * per var devo gestire solo un id : quello della variabile
- * 
- * 
- *  per fun devo controllare che l'id della funzione così come quelli dei suoi possibili cmapi(^?)
- *  
- *  negli altri casi non ho problemi perchè vado a prendere solo il primo otken: se lui matcha la produzione 
- *  almeno il primo token ci deve essere
- *  
- *  Come funziona sta roba del match , riguarda metodo fun 
- *  ricorsione a dx sx nella grammatica????
- *  
- *  Il comportamento di antlr in caso di syntax error è poco documentato, se un ?? 
- *  
- */
+
 public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 
 	String indent;
@@ -34,7 +17,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	
     ASTGenerationSTVisitor() {}    
     ASTGenerationSTVisitor(boolean debug) { print=debug; }
-        
+
     private void printVarAndProdName(ParserRuleContext ctx) {
         String prefix="";        
     	Class<?> ctxClass=ctx.getClass(), parentClass=ctxClass.getSuperclass();
@@ -102,8 +85,8 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		if (print) printVarAndProdName(c);
 		Node n = null;
 		if (c.ID()!=null) { //non-incomplete ST
-			n = new VarNode(c.ID().getText(), (TypeNode) visit(c.type()), visit(c.exp()));
-			n.setLine(c.VAR().getSymbol().getLine());
+			n = new VarNode(c.ID().getText(), (TypeNode) visit(c.type()), visit(c.exp()));//c.ID().getText(): restituisce il nome della variabile tipo x,  y 
+			n.setLine(c.VAR().getSymbol().getLine()); //mi serve solo per capire la riga a cui è dichiarata la variabile
 		}
         return n;
 	}
@@ -112,8 +95,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 	public Node visitFundec(FundecContext c) {
 		if (print) printVarAndProdName(c);
 		List<ParNode> parList = new ArrayList<>();
-		for (int i = 1; i < c.ID().size(); i++) { 
-			//finchè sto nel raggio del size sono tranquilla perchè???
+		for (int i = 1; i < c.ID().size(); i++) { // c.ID().size() = lunghezza della lista dei parameetri 
 			ParNode p = new ParNode(c.ID(i).getText(),(TypeNode) visit(c.type(i)));
 			p.setLine(c.ID(i).getSymbol().getLine());
 			parList.add(p);
@@ -121,7 +103,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		List<Node> decList = new ArrayList<>();
 		for (DecContext dec : c.dec()) decList.add(visit(dec));
 		Node n = null;
-		if (c.ID().size()>0) { //non-incomplete ST
+		if (c.ID().size()>0) { //non-incomplete ST	////non possiamo avere una funzione senza parametri per com'è definita la grammatica
 			n = new FunNode(c.ID(0).getText(),(TypeNode)visit(c.type(0)),parList,decList,visit(c.exp()));
 			n.setLine(c.FUN().getSymbol().getLine());
 		}

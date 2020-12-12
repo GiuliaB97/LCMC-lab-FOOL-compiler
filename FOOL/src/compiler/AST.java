@@ -113,7 +113,7 @@ public class AST {
 	}
 	
 	public static class IdNode extends Node {
-		String id;
+		String id;		//x
 		STentry entry;
 		int nl;
 		IdNode(String i) {id = i;}

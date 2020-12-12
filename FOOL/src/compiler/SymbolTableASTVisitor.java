@@ -66,8 +66,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 		Map<String, STentry> hmn = new HashMap<>();//creare una nuova hashmap per la symTable
 		symTable.add(hmn);
 		int prevNLDecOffset=decOffset; // stores counter for offset of declarations at previous nesting level 
-		this.decOffset=-2;
-		
+		this.decOffset=-2;//negativo perchè lo stack cresce verso il basso
 		int parOffSet=1;				//così realizziamo gli offset dei parametri
 		for (ParNode par : n.parlist)
 			if (hmn.put(par.id, new STentry(nestingLevel,par.type, parOffSet++)) != null) {

@@ -149,12 +149,6 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 	public TypeNode visitNode(CallNode n) throws TypeException {
 		if (print) printNode(n,n.id);
 		TypeNode t = visit(n.entry); // STentry visit
-									/*
-									 * pallina messa dal symboltable atsvisitor; usando la sym table
-									 * qui quindi ci sono le informazioni sulla dichairazione
-									 * estraggo il tipo e loo memorizzo
-									 *  ,n.getLine() prende il numero di linea dal nodo
-									 */
 		if ( !(t instanceof ArrowTypeNode) ) //A
 			throw new TypeException("Invocation of a non-function "+n.id,n.getLine());
 		ArrowTypeNode at = (ArrowTypeNode) t;//downcast
@@ -170,7 +164,7 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 	public TypeNode visitNode(IdNode n) throws TypeException {
 		if (print) printNode(n,n.id);
 		TypeNode t = visit(n.entry); // STentry visit
-		if (t instanceof ArrowTypeNode)
+		if (t instanceof ArrowTypeNode)// se è una funzione(solo le funzioni per il momento sono di tipo): errore
 			throw new TypeException("Wrong usage of function identifier " + n.id,n.getLine());
 		return t;
 	}

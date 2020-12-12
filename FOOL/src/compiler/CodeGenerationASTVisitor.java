@@ -5,15 +5,10 @@ import compiler.lib.*;
 import compiler.exc.*;
 import static compiler.lib.FOOLlib.*;
 /*
- * 
- * sta volta le visite ritornano stringhe 
+ * AIM
  * procede bottom up a creare una stringa che contiene tutto il codice
  * l'albero è sicuramente completo perchè ho superato la fase di frontend
  * */
-/*
- * COSE NON CHIARE
- * EQUAL NODE, IF NODE, ID NODE: doppio lw (access kubj
- */
 public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidException> {
 
   CodeGenerationASTVisitor() {}
@@ -21,7 +16,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 /*
  * prima di eseguire il corpo del programma deve allocare l'activation record 
  * (seguendo il layout nel file di esempio(devono rispettare gli offset scelti)) perchè
- * il corpo del programma poi userà le variabili che altrimenti non potrebebro essere raggiungibili
+ * il corpo del programma poi userà le variabili che altrimenti non potrebbero essere raggiungibili
  *
  * nlJoin:
  * alla prima dichairazione il risultato è visita di dec perchè null viene ignorato dalla funzione
@@ -75,31 +70,26 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		String funl = freshFunLabel();	//creazione fresh label
 		String declCode = null;
 		String localPar=null;
-		/*
-		 * 		String localdec=null;
-		if (print) printNode(n,n.id);
-		for (Node arg : n.arglist) visit(arg);
-		for (int i = n.arglist.size() - 1; i >= 0; i--) argCode = nlJoin(argCode, visit(n.arglist.get(i)));//Devo visitarle in ordine inverso perchè?che cosa sto salvando?
-		String getAR = null;
-		for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");//getAr codice che mi serve per raggiunger l'ar della dichiarazione; iterando sulla differenza di nesting level ad ogni iterazione aggiungo una lw alla stringa
-
-		 */
-		for (ParNode par : n.parlist) localPar=nlJoin(localPar,visit(par));
-		for (Node dec : n.declist) declCode=nlJoin(declCode,visit(dec));
+		String pop=null;
+		//for (ParNode par : n.parlist) localPar=nlJoin(localPar,visit(par));
+		for (int i =0; i <n.declist.size(); i++) {
+			declCode=nlJoin(declCode,visit(n.declist.get(i)));
+			pop=nlJoin(pop,"pop");
+		}
+		//for (Node dec : n.declist) declCode=nlJoin(declCode,visit(dec));
 		visit(n.exp);
 		visit(n.exp);
-		putCode(nlJoin(funl+ ":" +
+		putCode(nlJoin(
+				funl+ ":",
 				/*codice corpo funzione*/
-				"push",
-				"cfp",
-				"lra",
+				"lfp",
+				"sra",
 				declCode,
-				localPar,
+				visit(n.exp),
 				"stm",
+				pop,
 				"pop",
-				"pop",
-				"pop",
-				"push",
+				"lra",
 				"ltm",
 				"lra"
 				//jump
@@ -230,19 +220,22 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		String argCode = null, getAR = null;
 		for (int i=n.arglist.size()-1;i>=0;i--) argCode=
 				nlJoin(argCode,visit(n.arglist.get(i)));
+		//n.nl =nesting level a cui è fatta la chiamata
+		//n.entry.nl= nesting level a cui è dichiarata la funzione 
 		for (int i = 0;i<n.nl-n.entry.nl;i++) getAR=nlJoin(getAR,"lw");
 		return nlJoin(
 				"lfp", // load Control Link (pointer to frame of function "id" caller)
 				argCode, // generate code for argument expressions in reversed order
 				"lfp", getAR, // retrieve address of frame containing "id" declaration
+													//dichiarazione della funzione che chiamo 
 	                          // by following the static chain (of Access Links)
 	            "stm", // set $tm to popped value (with the aim of duplicating top of stack)
 	            "ltm", // load Access Link (pointer to frame of function "id" declaration)
 	            "ltm", // duplicate top of stack
-	            "push "+n.entry.offset, "add", // compute address of "id" declaration
+	            "push"+n.entry.offset, "add", // compute address of "id" declaration
 				"lw", // load address of "id" function
 	            "js"  // jump to popped address (saving address of subsequent instruction in $ra)
-			);
+			);//tutto per capire dove devo saltare
 	}
 
 	@Override
@@ -250,8 +243,9 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		if (print) printNode(n,n.id);	
 		String getAR = null;
 		for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");
-		/*getAr codice che mi serve per raggiunger l'ar della dichiarazione; 
-		iterando sulla differenza di nesting level ad ogni iterazione aggiungo una lw alla stringa
+		/*	getAr codice che mi serve per raggiunger l'ar della dichiarazione; 
+			iterando sulla differenza di nesting level ad ogni iterazione 
+			aggiungo una lw alla stringa
 		*/
 	
 		return nlJoin(

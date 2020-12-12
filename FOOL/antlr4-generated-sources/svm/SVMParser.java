@@ -97,14 +97,22 @@ public class SVMParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	public int[] code = new int[ExecuteVM.CODESIZE];  /* code � un array di interi che conterr� il codice oggetto
-	 											* creato vuoto; con sta costante,
+		
+	public int[] code = new int[ExecuteVM.CODESIZE];  
+												/* code � un array di interi che conterr� il 
+												* codice oggetto creato vuoto; con sta costante,
 	 											* idea tutte le volte che vedo un'istruzione vado a 
-	 											* popolare l'array code''
-	 											* ed incremento la i
+	 											* popolare l'array code'' ed incremento la i
 	 											* occhio: non stiamo eseguendo ma stiamo 
 	 											* trasformando il resto in numeri
+	 											* 
+	 											* code[] contiene lo stesso codice che che c'� 
+	 											* nella variabile code di ExecuteVM.
+	 											* In ExecuteVM il codice generato da CodeGeneration 
+	 											* (.asm ) viene tradotto in corrispondenti istruzioni 
+	 											* in interi
 	 											*  */  
+	 											
 	private int i = 0; /*non stiamo eseguendo ma trasformando il testo in numeri la i verr� incrementata */
 						/* ad ogni token viene associato in maniera automatica da antlr 
 						 * un numero(SVM.tokens)
