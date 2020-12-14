@@ -67,36 +67,50 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 	@Override
 	public String visitNode(FunNode n) {
 		if (print) printNode(n,n.id);
-		String funl = freshFunLabel();	//creazione fresh label
-		String declCode = null;
-		String localPar=null;
-		String pop=null;
-		//for (ParNode par : n.parlist) localPar=nlJoin(localPar,visit(par));
-		for (int i =0; i <n.declist.size(); i++) {
-			declCode=nlJoin(declCode,visit(n.declist.get(i)));
-			pop=nlJoin(pop,"pop");
+		String declCode = null, popDecl = null, popParl = null;
+		for (Node dec : n.declist) {
+			declCode = nlJoin(declCode,visit(dec));
+			popDecl = nlJoin(popDecl,"pop");
 		}
-		//for (Node dec : n.declist) declCode=nlJoin(declCode,visit(dec));
-		visit(n.exp);
-		visit(n.exp);
-		putCode(nlJoin(
-				funl+ ":",
-				/*codice corpo funzione*/
-				"lfp",
-				"sra",
-				declCode,
-				visit(n.exp),
-				"stm",
-				pop,
-				"pop",
-				"lra",
-				"ltm",
-				"lra"
-				//jump
-				)); /*posto dove colleziono tutti i codici delle funzioni e
-		 														quando ho finito li metto tutti dopo
-		 														qui faccio push di un'etichetta a cui poi dovrò andare a mettere il corpo della funzione*/
-		return "push" + funl;
+		for (int i=0;i<n.parlist.size();i++) popParl = nlJoin(popParl,"pop");
+		String funl = freshFunLabel();
+		//questo è il momento giusto perchè ascolta i primi 10 minuti
+		putCode(
+			nlJoin(
+					//devo finire di allocare l'activation record
+				funl+":",
+				"cfp", // set $fp to $sp value
+				"lra", // load $ra value //il chiamante ha usato js per arrivare a noi, nel js c'è l'istruzione successiva a js alla quale dobbiamo tornare
+				//le dichiarazioni delle funzioni allocano ciascuna qualcosa, se è una dichiarazione di var le allochiamo con il valore calcolato dalla loro espressione, se sono funzioni le allochiamo con la push dell'indirizzo
+				declCode, // generate code for local declarations (they use the new $fp!!!)
+				//parametri li metto in ordine inverso perchè primo parametro ha offset 1, secondo 2 (?) ma le dichiarazioni le mettiamo nello stesso ordine in cui compaiono del codice
+				//è fondamentantale settare fp all'inizio perchè dentro declcode, posso avere funzioni con paraemtri e roba locali a un certo punto può fare dei calcoli che usano var appena dichiarate e dove le trova? le trov anell'activation record in cui siamo, lui la x la raggiunge tramite il registro fp, il registro fp deve essere settato in modo che punti all'activation record in cui siamo (?),
+				
+				
+				visit(n.exp), // generate code for function body expression
+				
+				//salvo il valore del corpo della funzione nel registro tmp
+				"stm", // set $tm to popped value (function result)
+				
+				//inizio a rimuovere l'activation record
+				//rimuovo le dichiarazioni
+				popDecl, // remove local declarations from stack
+				//rimuovo il return address: lo prendo e lo metto in ra così quando devo saltaare lo vado a prendere e per saltare indietro al chiamante
+				"sra", // set $ra to popped value
+				//rimuovo l'access link, allocato dal chiamante come ultima cosa 
+				"pop", // remove Access Link from stack
+				//il chiamante aveva allocato gli argomenti che ci aveva passatojk
+				popParl, // remove parameters from stack
+				//rimuovo il control link con fp, il control link mi serve per ripristinare il frame pointer alla posizione dle chiamante(Come se la chiamata a funzione non fosse avevanuta
+				"sfp", // set $fp to popped value (Control Link)
+				//recupero il valore della funzione (unica cosa che deve restare sullo stack
+				"ltm", // load $tm value (function result)
+				"lra", // load $ra value
+				//salto al chiamante
+				"js"  // jump to to popped address
+			)
+		);
+		return "push "+funl;	
 	}
 /*
  * var node deve allocare sullo stack il valore calcolato per la variabile
