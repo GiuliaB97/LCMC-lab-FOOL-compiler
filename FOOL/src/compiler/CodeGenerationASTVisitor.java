@@ -9,6 +9,24 @@ import static compiler.lib.FOOLlib.*;
  * procede bottom up a creare una stringa che contiene tutto il codice
  * l'albero è sicuramente completo perchè ho superato la fase di frontend
  * */
+
+
+/*
+ * nell'ambiente globale c'è solo l'ar della funzione
+ * visual vm vicino all'istruzione ci sono i numeri di linea non gli indirizzi 
+ * stack : a sx
+ * heap al centro
+ * file fool.asm : a dx
+ * la prima dichiarazione + sempre a offset -2 1000=memmsize, 9998
+ * prima cosa da fare settare il control link lfp: frame pointer del chiamante
+ * avanzo nella creazione dell'ar 
+ * aggiungo la dichiarazione dei parametri in ordine inverso(push 5 e 3)ù
+ * trovo all'access link, dovrei risalire la catena ma qui è locale quindi dico direttamente che punta all'ar dell'ambiente globale
+ * duplico la dichiarazione (mi serve per settare l'access link(9994), e per trovare l'address dove è dichiarata la funzione(9998) (stm ltm ltm)  
+ * con lw carico 20, con js salto e metto nel registro ra l'istruzione alla quale devo tornare; 
+ * settp fp che deve ora pntare all'ar creato 9994 carico il return address sullo stakc, poi avrei le dichairazionji locali, poi il corpo della funzione, va prendere i due parametri
+ * parte da 994 e a offset 1 trova il primo parametro, a offset 2 il secondo 
+ */
 public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidException> {
 
   CodeGenerationASTVisitor() {}
