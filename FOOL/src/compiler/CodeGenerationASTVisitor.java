@@ -22,6 +22,9 @@ import static compiler.lib.FOOLlib.*;
  * alla prima dichairazione il risultato è visita di dec perchè null viene ignorato dalla funzione
  * poi concatena il risutlato della visita successiva,
  * quindi alloca le variabili una ad una"
+ * 
+ * 	Print: accede alle librerie del so e stampa lo stack
+ * 		   non genera uno scope annidato perché è una chiamata come (+, *, +, -) è una primitiva speciale che non genera scope.
  */
 public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidException> {
 
@@ -146,7 +149,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
  * -then
  * -cond: 0 o 1
  * push 1 controllo se sono uguali: se vero salto ad l1, se tiro dritto devo ritornarnare l'else
- * 
+ *  poppa due cose dallo stack salta a un etichetta se sono uguali o tira dritto altrimenti
  */
 	@Override
 	public String visitNode(IfNode n) {
@@ -159,9 +162,9 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		visit(n.el);
 		return nlJoin(
 				visit(n.cond), 
-				"push 1", 	//pusho e controllo se è uguale al risultato della visita	
+				"push 1", 	//pusho 1 e controllo se è uguale al risultato della visita	(ATTENZIONE 1 mi serve solo per avere un valore di confronto
 				"beq "+l1,	//se sono uguali salto allo then //if(cond)then{1}else{0}; //(0 == false e 1== true)
-				visit(n.el),
+				visit(n.el),//visito le sottoesspressioni per calcolarle e mettere il risultato nello stack
 				"b "+l2,	//Se ho fatto l'else salto alla fine 
 				l1+":",
 				visit(n.th),
@@ -225,6 +228,15 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		);/*ci metto l'nljoin perchè ogni volta che ho più di un argomento lo devo usare*/
 	}
 	
+	/*
+	 * Call node prima cosa devo caricare indirizzo control link: 
+	 * frame in cui sono poi parametri in ordine inverso perchè sono nello heap che cresce verso l'alto 
+	 * quindi devo caricare l'ultima a indirizzo N … fino ad arrivare caricare sullo stack il parametro con l'offset 1.
+	 * Ultima cosa da fare mettere valore access link, ossia il frame in cui è dichiarata la funzione, 
+	 * qui sono dove l'ho chiamata.
+	 * Come lo trovo? 
+	 * Differenza di nesting level (lfp getAr)  e poi saltare.
+	 */
 	@Override
 	public String visitNode(CallNode n) {
 		if (print) printNode(n,n.id);
@@ -260,11 +272,12 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		String getAR = null;
 		for (int i = 0; i < n.nl - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");	
 		return nlJoin(
-				"lfp",	//retrieve address of frame containing "id" declaration
+				"lfp",	//mette il valore del registro fp sullo stack: mi serve per localizzare il frame
+				//retrieve address of frame containing "id" declaration
 				getAR, // by following the static chain (of Access Links)
 				"push" +n.entry.offset,	"add",//compute address of "id" declaration (addr=indirizzo AL + offset)
-				"lw" 					/*prende l'indirizzo sulla cima dello stack, lo poppa e mette al suo posto i valore della variabile corrispondente*/
-										//load value of "id" variable
+				"lw" 	/*prende l'indirizzo sulla cima dello stack, lo poppa e mette al suo posto i valore della variabile corrispondente*/
+						//load value of "id" variable
 				);
 	}
 
