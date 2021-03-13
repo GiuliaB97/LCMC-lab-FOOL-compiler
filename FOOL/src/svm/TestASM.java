@@ -14,8 +14,7 @@ public class TestASM {
         SVMLexer lexerASM = new SVMLexer(charsASM);
         CommonTokenStream tokensASM = new CommonTokenStream(lexerASM);
         SVMParser parserASM = new SVMParser(tokensASM);
-        
-        
+                
         parserASM.assembly();
         
         System.out.println("You had: "+lexerASM.lexicalErrors+" lexical errors and "+parserASM.getNumberOfSyntaxErrors()+" syntax errors.");

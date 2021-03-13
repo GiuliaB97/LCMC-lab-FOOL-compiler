@@ -1,6 +1,3 @@
-/svm/
-/svm7_10/
-/svm_lab7_10/
 /SVM.interp
 /SVM.tokens
 /SVMBaseVisitor.java
@@ -9,6 +6,7 @@
 /SVMLexer.tokens
 /SVMParser.java
 /SVMVisitor.java
+/svm/
 /FOOL.interp
 /FOOL.tokens
 /FOOLBaseVisitor.java
@@ -17,9 +15,3 @@
 /FOOLLexer.tokens
 /FOOLParser.java
 /FOOLVisitor.java
-/compiler/
-/compiler10/
-/compiler_lab10/
-/compiler_lab8/
-/compiler_lab9/
-/visualsvm/

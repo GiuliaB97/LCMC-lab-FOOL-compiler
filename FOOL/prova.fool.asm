@@ -2,7 +2,7 @@ push 0
 push 5
 push 2
 add
-pushfunction0
+push function1
 lfp
 push 1
 lfp
@@ -14,21 +14,21 @@ add
 lw
 js
 push 1
-beq label12
+beq label4
 push 10
-b label13
-label12:
+b label5
+label4:
 lfp
 push-2
 add
 lw
-label13:
+label5:
 print
 halt
 
-function1:
-lfp
-sra
+function0:
+cfp
+lra
 lfp
 push2
 add
@@ -41,12 +41,12 @@ lw
 push-2
 add
 lw
-beq label4
+beq label0
 push 0
-b label5
-label4:
+b label1
+label0:
 push 1
-label5:
+label1:
 lfp
 lw
 lw
@@ -59,24 +59,28 @@ lw
 js
 stm
 pop
+sra
 pop
-lra
+pop
+pop
+sfp
 ltm
 lra
+js
 
-function0:
-lfp
-sra
-pushfunction1
+function1:
+cfp
+lra
+push function0
 lfp
 push1
 add
 lw
 push 1
-beq label10
+beq label2
 push 0
-b label11
-label10:
+b label3
+label2:
 lfp
 push 3
 push 2
@@ -88,10 +92,13 @@ push-2
 add
 lw
 js
-label11:
+label3:
 stm
 pop
+sra
 pop
-lra
+pop
+sfp
 ltm
 lra
+js

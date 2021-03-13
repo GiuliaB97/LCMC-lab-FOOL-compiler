@@ -30,6 +30,7 @@ assembly: instruction* EOF 	{ for (Integer j: labelRef.keySet())
 								code[j]=labelDef.get(labelRef.get(j)); 
 							} ;
 
+
 instruction:
         t=PUSH n=INTEGER        { codem($t.line, PUSH, Integer.parseInt($n.text)); } //push NUMBER on the stack
 	  | t=PUSH l=LABEL         { codem($t.line, PUSH); labelRef.put(i++,$l.text); } //push the location address pointed by LABEL on the stack	     

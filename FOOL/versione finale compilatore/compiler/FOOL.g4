@@ -19,6 +19,7 @@ dec : VAR ID COLON type ASS exp SEMIC  #vardec
         	(LET dec+ IN)? exp SEMIC   #fundec
     ;
            
+           
 exp     : exp TIMES exp #times
         | exp PLUS  exp #plus
         | exp EQ  exp   #eq 
