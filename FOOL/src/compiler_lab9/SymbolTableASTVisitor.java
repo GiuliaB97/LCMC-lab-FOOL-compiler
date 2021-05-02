@@ -149,8 +149,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void> {
  */
 	@Override
 	public Void visitNode(VarNode n) {
-		if (print) printNode(n,n.id);				
-													//A
+		if (print) printNode(n,n.id);				//A
 		visit(n.exp);								// B
 		Map<String, STentry>hm=this.symTable.get(nestingLevel); // C
 		STentry entry = new STentry(nestingLevel);				// D
